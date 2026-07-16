@@ -1,0 +1,56 @@
+import { Link } from "@tanstack/react-router";
+import { Card } from "@/components/ui/card";
+import { Download, Star } from "lucide-react";
+import { StatusBadge } from "./StatusBadges";
+import type { Product } from "@/lib/data";
+
+const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "AI" };
+const KIND_GRADIENT: Record<string, string> = {
+  app: "from-blue-500/30 to-cyan-400/20",
+  game: "from-fuchsia-500/30 to-orange-400/20",
+  ai: "from-emerald-500/30 to-teal-400/20",
+};
+
+export function ProductCard({ p }: { p: Product }) {
+  return (
+    <Link
+      to="/products/$slug"
+      params={{ slug: p.slug }}
+      className="group block animate-fade-up"
+    >
+      <Card className="glass hover:shadow-glow overflow-hidden border-white/5 bg-transparent transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
+        <div className={`relative h-32 overflow-hidden bg-gradient-to-br ${KIND_GRADIENT[p.kind]}`}>
+          <div className="absolute inset-0 grid-bg opacity-40" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="grid h-16 w-16 place-items-center rounded-2xl glass-strong text-2xl font-bold text-white shadow-glow">
+              {p.name.slice(0, 2).toUpperCase()}
+            </div>
+          </div>
+          <div className="absolute right-2 top-2">
+            <span className="rounded-md bg-black/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white/90 backdrop-blur">
+              {KIND_LABEL[p.kind]}
+            </span>
+          </div>
+        </div>
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>
+            <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+              <Star className="h-3.5 w-3.5 fill-yellow-400 stroke-yellow-400" />
+              {Number(p.rating_avg).toFixed(1)}
+            </div>
+          </div>
+          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <StatusBadge value={p.status} />
+            <StatusBadge value={p.source_type} />
+          </div>
+          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+            <span>v{p.latest_version}</span>
+            <span className="flex items-center gap-1"><Download className="h-3 w-3" />{p.download_count.toLocaleString()}</span>
+          </div>
+        </div>
+      </Card>
+    </Link>
+  );
+}
