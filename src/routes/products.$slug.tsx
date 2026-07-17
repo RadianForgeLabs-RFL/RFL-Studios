@@ -1,18 +1,16 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { productBySlugQuery, reviewsQuery } from "@/lib/data";
-import { BadgeRow, StatusBadge } from "@/components/site/StatusBadges";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { productBySlugQuery } from "@/lib/data";
+import { StatusBadge } from "@/components/site/StatusBadges";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Download, Star, Heart, ExternalLink, Github, FileCode, Calendar } from "lucide-react";
+import { Download, Heart, ExternalLink, Github, FileCode, Calendar } from "lucide-react";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
@@ -39,22 +37,10 @@ export const Route = createFileRoute("/products/$slug")({
   errorComponent: ({ error }) => <div className="p-12 text-center text-destructive">{error.message}</div>,
 });
 
-function StarBar({ value }: { value: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star key={i} className={`h-4 w-4 ${i < Math.round(value) ? "fill-yellow-400 stroke-yellow-400" : "stroke-muted-foreground"}`} />
-      ))}
-    </div>
-  );
-}
-
 function ProductPage() {
   const { slug } = Route.useParams();
   const { data: p } = useQuery(productBySlugQuery(slug));
-  const { data: reviews } = useQuery(reviewsQuery(p?.id ?? ""));
   const { user } = useAuth();
-  const qc = useQueryClient();
   const [favorited, setFavorited] = useState(false);
 
   useEffect(() => {
@@ -83,7 +69,6 @@ function ProductPage() {
 
   return (
     <div>
-      {/* Banner */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-hero opacity-70" />
         <div className="absolute inset-0 grid-bg opacity-30" />
@@ -97,13 +82,11 @@ function ProductPage() {
                 <div className="text-xs uppercase tracking-widest text-primary">{p.kind}</div>
                 <h1 className="truncate text-3xl font-bold md:text-5xl">{p.name}</h1>
                 <p className="mt-1 text-lg text-muted-foreground">{p.tagline}</p>
-                <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1"><Star className="h-4 w-4 fill-yellow-400 stroke-yellow-400" />{Number(p.rating_avg).toFixed(1)} ({p.rating_count})</span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1"><Download className="h-4 w-4" />{p.download_count.toLocaleString()}</span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{p.release_date}</span>
-                </div>
+                {p.release_date && (
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{p.release_date}</span>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2">
@@ -128,7 +111,6 @@ function ProductPage() {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="downloads">Downloads</TabsTrigger>
             <TabsTrigger value="changelog">Changelog</TabsTrigger>
-            <TabsTrigger value="reviews">Reviews ({p.rating_count})</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="mt-6">
@@ -210,10 +192,6 @@ function ProductPage() {
               )}
             </Card>
           </TabsContent>
-
-          <TabsContent value="reviews" className="mt-6">
-            <Reviews productId={p.id} rating={p.rating_avg} count={p.rating_count} reviews={reviews ?? []} onChanged={() => qc.invalidateQueries({ queryKey: ["reviews", p.id] })} />
-          </TabsContent>
         </Tabs>
       </section>
     </div>
@@ -223,74 +201,4 @@ function ProductPage() {
 function Info({ k, v }: { k: string; v?: string | number | null }) {
   if (!v) return null;
   return (<div className="flex justify-between gap-4"><dt className="text-muted-foreground">{k}</dt><dd className="text-right">{v}</dd></div>);
-}
-
-function Reviews({ productId, rating, count, reviews, onChanged }: { productId: string; rating: number; count: number; reviews: any[]; onChanged: () => void }) {
-  const { user } = useAuth();
-  const [my, setMy] = useState<any | null>(null);
-  const [ratingIn, setRatingIn] = useState(5);
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-
-  useEffect(() => {
-    if (!user) return;
-    const r = reviews.find((r) => r.user_id === user.id);
-    if (r) { setMy(r); setRatingIn(r.rating); setTitle(r.title ?? ""); setBody(r.body ?? ""); }
-  }, [user, reviews]);
-
-  const emailVerified = !!user?.email_confirmed_at;
-
-  const submit = useMutation({
-    mutationFn: async () => {
-      if (!user) throw new Error("Sign in required.");
-      if (!emailVerified) throw new Error("Please verify your email first.");
-      const payload = { product_id: productId, user_id: user.id, rating: ratingIn, title: title || null, body: body || null };
-      const { error } = await supabase.from("reviews").upsert(payload, { onConflict: "product_id,user_id" });
-      if (error) throw error;
-    },
-    onSuccess: () => { toast.success("Review saved"); onChanged(); },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  return (
-    <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-      <div className="space-y-4">
-        {reviews.length === 0 && <p className="text-muted-foreground">No reviews yet — be the first.</p>}
-        {reviews.map((r) => (
-          <Card key={r.id} className="glass border-white/5 bg-transparent p-5">
-            <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold">{r.profile?.display_name ?? "Anonymous"}</div>
-              <StarBar value={r.rating} />
-            </div>
-            {r.title && <div className="mt-1 font-semibold">{r.title}</div>}
-            {r.body && <p className="mt-1 text-sm text-muted-foreground">{r.body}</p>}
-            <div className="mt-2 text-xs text-muted-foreground">{new Date(r.created_at).toLocaleDateString()}</div>
-          </Card>
-        ))}
-      </div>
-      <Card className="glass sticky top-24 h-fit border-white/5 bg-transparent p-5">
-        <h3 className="font-semibold">{my ? "Your review" : "Write a review"}</h3>
-        <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">Overall <StarBar value={rating} /> · {count}</div>
-        {!user && <p className="mt-4 text-sm text-muted-foreground">Please <Link to="/auth" className="text-primary">sign in</Link> to review.</p>}
-        {user && !emailVerified && <p className="mt-4 text-sm text-yellow-300">Verify your email to review.</p>}
-        {user && emailVerified && (
-          <div className="mt-4 space-y-3">
-            <div>
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">Your rating</label>
-              <div className="mt-1 flex gap-1">
-                {[1,2,3,4,5].map((n) => (
-                  <button key={n} onClick={() => setRatingIn(n)}>
-                    <Star className={`h-6 w-6 ${n <= ratingIn ? "fill-yellow-400 stroke-yellow-400" : "stroke-muted-foreground"}`} />
-                  </button>
-                ))}
-              </div>
-            </div>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Title (optional)" maxLength={150} className="glass border-white/10 bg-transparent" />
-            <Textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Share your experience" rows={4} maxLength={2000} className="glass border-white/10 bg-transparent" />
-            <Button onClick={() => submit.mutate()} disabled={submit.isPending} className="w-full bg-gradient-brand text-brand-foreground shadow-glow">{submit.isPending ? "Saving…" : my ? "Update review" : "Submit review"}</Button>
-          </div>
-        )}
-      </Card>
-    </div>
-  );
 }
