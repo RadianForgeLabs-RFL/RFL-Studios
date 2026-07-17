@@ -84,11 +84,9 @@ function Home() {
 
       {/* STATS */}
       <section className="mx-auto -mt-8 max-w-7xl px-4">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
           <StatCard label="Apps" value={s.apps_published ?? 0} />
           <StatCard label="Games" value={s.games_published ?? 0} />
-          <StatCard label="Users" value={s.users ?? 0} />
-          <StatCard label="Community" value={s.community_members ?? 0} />
           <StatCard label="Open Source" value={s.open_source_projects ?? 0} />
         </div>
       </section>

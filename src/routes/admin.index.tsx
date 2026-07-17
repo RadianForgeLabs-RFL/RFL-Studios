@@ -11,9 +11,8 @@ function AdminDashboard() {
   const stats = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const [products, requests, news] = await Promise.all([
+      const [products, news] = await Promise.all([
         supabase.from("products").select("id, kind, published"),
-        supabase.from("requests").select("id, status"),
         supabase.from("news").select("id, published"),
       ]);
       return {
@@ -23,7 +22,6 @@ function AdminDashboard() {
         ai: products.data?.filter((p: any) => p.kind === "ai").length ?? 0,
         published: products.data?.filter((p: any) => p.published).length ?? 0,
         news: news.data?.length ?? 0,
-        openRequests: requests.data?.filter((r: any) => r.status === "open").length ?? 0,
       };
     },
   });
@@ -31,7 +29,7 @@ function AdminDashboard() {
 
   const cards = [
     ["Products", s?.totalProducts], ["Apps", s?.apps], ["Games", s?.games], ["AI Tools", s?.ai],
-    ["Published", s?.published], ["News posts", s?.news], ["Open requests", s?.openRequests],
+    ["Published", s?.published], ["News posts", s?.news],
   ];
 
   return (
