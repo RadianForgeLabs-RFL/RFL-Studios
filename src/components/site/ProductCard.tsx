@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
-import { Download, Star } from "lucide-react";
 import { StatusBadge } from "./StatusBadges";
 import type { Product } from "@/lib/data";
 
@@ -33,22 +32,15 @@ export function ProductCard({ p }: { p: Product }) {
           </div>
         </div>
         <div className="p-4">
-          <div className="flex items-start justify-between gap-2">
-            <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>
-            <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
-              <Star className="h-3.5 w-3.5 fill-yellow-400 stroke-yellow-400" />
-              {Number(p.rating_avg).toFixed(1)}
-            </div>
-          </div>
+          <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
             <StatusBadge value={p.status} />
             <StatusBadge value={p.source_type} />
           </div>
-          <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-            <span>v{p.latest_version}</span>
-            <span className="flex items-center gap-1"><Download className="h-3 w-3" />{p.download_count.toLocaleString()}</span>
-          </div>
+          {p.latest_version && (
+            <div className="mt-3 text-xs text-muted-foreground">v{p.latest_version}</div>
+          )}
         </div>
       </Card>
     </Link>

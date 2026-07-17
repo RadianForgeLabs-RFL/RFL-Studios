@@ -11,19 +11,18 @@ function AdminDashboard() {
   const stats = useQuery({
     queryKey: ["admin-stats"],
     queryFn: async () => {
-      const [products, reviews, requests] = await Promise.all([
-        supabase.from("products").select("id, kind, download_count"),
-        supabase.from("reviews").select("id, rating"),
+      const [products, requests, news] = await Promise.all([
+        supabase.from("products").select("id, kind, published"),
         supabase.from("requests").select("id, status"),
+        supabase.from("news").select("id, published"),
       ]);
       return {
         totalProducts: products.data?.length ?? 0,
         apps: products.data?.filter((p: any) => p.kind === "app").length ?? 0,
         games: products.data?.filter((p: any) => p.kind === "game").length ?? 0,
         ai: products.data?.filter((p: any) => p.kind === "ai").length ?? 0,
-        downloads: products.data?.reduce((a: number, b: any) => a + (b.download_count ?? 0), 0) ?? 0,
-        reviews: reviews.data?.length ?? 0,
-        avgRating: reviews.data?.length ? (reviews.data.reduce((a: number, r: any) => a + r.rating, 0) / reviews.data.length) : 0,
+        published: products.data?.filter((p: any) => p.published).length ?? 0,
+        news: news.data?.length ?? 0,
         openRequests: requests.data?.filter((r: any) => r.status === "open").length ?? 0,
       };
     },
@@ -32,8 +31,7 @@ function AdminDashboard() {
 
   const cards = [
     ["Products", s?.totalProducts], ["Apps", s?.apps], ["Games", s?.games], ["AI Tools", s?.ai],
-    ["Downloads", s?.downloads?.toLocaleString()], ["Reviews", s?.reviews],
-    ["Avg. rating", s?.avgRating?.toFixed(2)], ["Open requests", s?.openRequests],
+    ["Published", s?.published], ["News posts", s?.news], ["Open requests", s?.openRequests],
   ];
 
   return (
