@@ -1,7 +1,7 @@
 import { createFileRoute, Link, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth, useIsAdmin } from "@/lib/useAuth";
-import { LayoutDashboard, Package, Newspaper, Users, Settings } from "lucide-react";
+import { LayoutDashboard, Package, Newspaper, Settings } from "lucide-react";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin — RFL Studios" }, { name: "robots", content: "noindex" }] }),
@@ -12,7 +12,6 @@ const LINKS: { to: string; label: string; icon: any; exact?: boolean }[] = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/news", label: "News", icon: Newspaper },
-  { to: "/admin/requests", label: "Requests", icon: Users },
   { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
