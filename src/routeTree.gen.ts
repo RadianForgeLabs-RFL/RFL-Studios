@@ -15,7 +15,6 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as GamesRouteImport } from './routes/games'
 import { Route as DownloadsRouteImport } from './routes/downloads'
-import { Route as CommunityRouteImport } from './routes/community'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppsRouteImport } from './routes/apps'
 import { Route as AiRouteImport } from './routes/ai'
@@ -26,7 +25,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ProductsSlugRouteImport } from './routes/products.$slug'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
-import { Route as AdminRequestsRouteImport } from './routes/admin.requests'
 import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminNewsRouteImport } from './routes/admin.news'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
@@ -59,11 +57,6 @@ const GamesRoute = GamesRouteImport.update({
 const DownloadsRoute = DownloadsRouteImport.update({
   id: '/downloads',
   path: '/downloads',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CommunityRoute = CommunityRouteImport.update({
-  id: '/community',
-  path: '/community',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -115,11 +108,6 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
-const AdminRequestsRoute = AdminRequestsRouteImport.update({
-  id: '/requests',
-  path: '/requests',
-  getParentRoute: () => AdminRoute,
-} as any)
 const AdminProductsRoute = AdminProductsRouteImport.update({
   id: '/products',
   path: '/products',
@@ -143,7 +131,6 @@ export interface FileRoutesByFullPath {
   '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
-  '/community': typeof CommunityRoute
   '/downloads': typeof DownloadsRoute
   '/games': typeof GamesRoute
   '/projects': typeof ProjectsRoute
@@ -153,7 +140,6 @@ export interface FileRoutesByFullPath {
   '/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -164,7 +150,6 @@ export interface FileRoutesByTo {
   '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
-  '/community': typeof CommunityRoute
   '/downloads': typeof DownloadsRoute
   '/games': typeof GamesRoute
   '/projects': typeof ProjectsRoute
@@ -174,7 +159,6 @@ export interface FileRoutesByTo {
   '/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin': typeof AdminIndexRoute
@@ -188,7 +172,6 @@ export interface FileRoutesById {
   '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
-  '/community': typeof CommunityRoute
   '/downloads': typeof DownloadsRoute
   '/games': typeof GamesRoute
   '/projects': typeof ProjectsRoute
@@ -198,7 +181,6 @@ export interface FileRoutesById {
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
-  '/admin/requests': typeof AdminRequestsRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/products/$slug': typeof ProductsSlugRoute
   '/admin/': typeof AdminIndexRoute
@@ -212,7 +194,6 @@ export interface FileRouteTypes {
     | '/ai'
     | '/apps'
     | '/auth'
-    | '/community'
     | '/downloads'
     | '/games'
     | '/projects'
@@ -222,7 +203,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin/news'
     | '/admin/products'
-    | '/admin/requests'
     | '/admin/settings'
     | '/products/$slug'
     | '/admin/'
@@ -233,7 +213,6 @@ export interface FileRouteTypes {
     | '/ai'
     | '/apps'
     | '/auth'
-    | '/community'
     | '/downloads'
     | '/games'
     | '/projects'
@@ -243,7 +222,6 @@ export interface FileRouteTypes {
     | '/account'
     | '/admin/news'
     | '/admin/products'
-    | '/admin/requests'
     | '/admin/settings'
     | '/products/$slug'
     | '/admin'
@@ -256,7 +234,6 @@ export interface FileRouteTypes {
     | '/ai'
     | '/apps'
     | '/auth'
-    | '/community'
     | '/downloads'
     | '/games'
     | '/projects'
@@ -266,7 +243,6 @@ export interface FileRouteTypes {
     | '/_authenticated/account'
     | '/admin/news'
     | '/admin/products'
-    | '/admin/requests'
     | '/admin/settings'
     | '/products/$slug'
     | '/admin/'
@@ -280,7 +256,6 @@ export interface RootRouteChildren {
   AiRoute: typeof AiRoute
   AppsRoute: typeof AppsRoute
   AuthRoute: typeof AuthRoute
-  CommunityRoute: typeof CommunityRoute
   DownloadsRoute: typeof DownloadsRoute
   GamesRoute: typeof GamesRoute
   ProjectsRoute: typeof ProjectsRoute
@@ -332,13 +307,6 @@ declare module '@tanstack/react-router' {
       path: '/downloads'
       fullPath: '/downloads'
       preLoaderRoute: typeof DownloadsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/community': {
-      id: '/community'
-      path: '/community'
-      fullPath: '/community'
-      preLoaderRoute: typeof CommunityRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -411,13 +379,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
-    '/admin/requests': {
-      id: '/admin/requests'
-      path: '/requests'
-      fullPath: '/admin/requests'
-      preLoaderRoute: typeof AdminRequestsRouteImport
-      parentRoute: typeof AdminRoute
-    }
     '/admin/products': {
       id: '/admin/products'
       path: '/products'
@@ -457,7 +418,6 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminNewsRoute: typeof AdminNewsRoute
   AdminProductsRoute: typeof AdminProductsRoute
-  AdminRequestsRoute: typeof AdminRequestsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -465,7 +425,6 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminNewsRoute: AdminNewsRoute,
   AdminProductsRoute: AdminProductsRoute,
-  AdminRequestsRoute: AdminRequestsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
@@ -480,7 +439,6 @@ const rootRouteChildren: RootRouteChildren = {
   AiRoute: AiRoute,
   AppsRoute: AppsRoute,
   AuthRoute: AuthRoute,
-  CommunityRoute: CommunityRoute,
   DownloadsRoute: DownloadsRoute,
   GamesRoute: GamesRoute,
   ProjectsRoute: ProjectsRoute,
