@@ -11,12 +11,13 @@ import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
     const data = await context.queryClient.ensureQueryData(productBySlugQuery(params.slug));
     if (!data) throw notFound();
-    return { name: data.name as string, tagline: data.tagline as string | null };
+    return { name: data.name as string, tagline: data.tagline as string | null, banner: data.banner_url as string | null };
   },
   head: ({ loaderData }) => ({
     meta: loaderData ? [
@@ -24,6 +25,7 @@ export const Route = createFileRoute("/products/$slug")({
       { name: "description", content: loaderData.tagline ?? `${loaderData.name} on RFL Studios.` },
       { property: "og:title", content: `${loaderData.name} — RFL Studios` },
       { property: "og:description", content: loaderData.tagline ?? "" },
+      ...(loaderData.banner ? [{ property: "og:image", content: loaderData.banner }] : []),
     ] : [{ title: "Not found" }, { name: "robots", content: "noindex" }],
   }),
   component: ProductPage,
@@ -66,17 +68,36 @@ function ProductPage() {
 
   const downloads: any[] = p.downloads ?? [];
   const versions: any[] = p.versions ?? [];
+  const screenshots: any[] = p.screenshots ?? [];
 
   return (
     <div>
+      {/* HERO with banner background */}
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-hero opacity-70" />
-        <div className="absolute inset-0 grid-bg opacity-30" />
+        {p.banner_url ? (
+          <>
+            <div className="absolute inset-0">
+              <img src={p.banner_url} alt="" className="h-full w-full object-cover opacity-40" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
+          </>
+        ) : (
+          <>
+            <div className="absolute inset-0 bg-gradient-hero opacity-70" />
+            <div className="absolute inset-0 grid-bg opacity-30" />
+          </>
+        )}
         <div className="relative mx-auto max-w-7xl px-4 py-14">
           <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-6 sm:flex sm:justify-between">
             <div className="flex min-w-0 items-start gap-5">
-              <div className="grid h-20 w-20 shrink-0 place-items-center rounded-2xl bg-gradient-brand text-3xl font-bold text-brand-foreground shadow-glow">
-                {p.name.slice(0, 2).toUpperCase()}
+              <div className="grid h-24 w-24 shrink-0 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-glow">
+                {p.icon_url ? (
+                  <img src={p.icon_url} alt={p.name} className="h-full w-full object-cover" />
+                ) : (
+                  <div className="grid h-full w-full place-items-center bg-gradient-brand text-3xl font-bold text-brand-foreground">
+                    {p.name.slice(0, 2).toUpperCase()}
+                  </div>
+                )}
               </div>
               <div className="min-w-0">
                 <div className="text-xs uppercase tracking-widest text-primary">{p.kind}</div>
@@ -109,6 +130,7 @@ function ProductPage() {
         <Tabs defaultValue="overview">
           <TabsList className="glass border border-white/5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            {screenshots.length > 0 && <TabsTrigger value="screenshots">Screenshots ({screenshots.length})</TabsTrigger>}
             <TabsTrigger value="downloads">Downloads</TabsTrigger>
             <TabsTrigger value="changelog">Changelog</TabsTrigger>
           </TabsList>
@@ -117,7 +139,7 @@ function ProductPage() {
             <div className="grid gap-6 lg:grid-cols-3">
               <Card className="glass border-white/5 bg-transparent p-6 lg:col-span-2">
                 <h2 className="text-xl font-semibold">Description</h2>
-                <p className="mt-3 text-muted-foreground">{p.description}</p>
+                <p className="mt-3 text-muted-foreground whitespace-pre-line">{p.description}</p>
                 {(p.features ?? []).length > 0 && (
                   <><h3 className="mt-6 font-semibold">Features</h3>
                   <ul className="mt-2 grid gap-2 sm:grid-cols-2">
@@ -129,6 +151,13 @@ function ProductPage() {
                 {p.requirements && <><h3 className="mt-6 font-semibold">Requirements</h3><p className="mt-2 text-sm text-muted-foreground">{p.requirements}</p></>}
                 {p.known_issues && <><h3 className="mt-6 font-semibold">Known issues</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.known_issues}</p></>}
                 {p.roadmap && <><h3 className="mt-6 font-semibold">Roadmap</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.roadmap}</p></>}
+
+                {screenshots.length > 0 && (
+                  <div className="mt-8">
+                    <h3 className="mb-3 font-semibold">Screenshots</h3>
+                    <ScreenshotGallery screenshots={screenshots} />
+                  </div>
+                )}
               </Card>
               <Card className="glass border-white/5 bg-transparent p-6">
                 <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Details</h3>
@@ -150,6 +179,14 @@ function ProductPage() {
               </Card>
             </div>
           </TabsContent>
+
+          {screenshots.length > 0 && (
+            <TabsContent value="screenshots" className="mt-6">
+              <Card className="glass border-white/5 bg-transparent p-6">
+                <ScreenshotGallery screenshots={screenshots} />
+              </Card>
+            </TabsContent>
+          )}
 
           <TabsContent value="downloads" className="mt-6">
             <div className="space-y-3">

@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
+import { ThemeProvider } from "@/components/site/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -64,7 +65,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
   shellComponent: RootShell,
@@ -95,11 +96,13 @@ function RootComponent() {
   }, [queryClient, router]);
   return (
     <QueryClientProvider client={queryClient}>
-      <AnnouncementBar />
-      <Header />
-      <main className="min-h-[70vh]"><Outlet /></main>
-      <Footer />
-      <Toaster theme="dark" position="top-right" />
+      <ThemeProvider>
+        <AnnouncementBar />
+        <Header />
+        <main className="min-h-[70vh]"><Outlet /></main>
+        <Footer />
+        <Toaster position="top-right" />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
