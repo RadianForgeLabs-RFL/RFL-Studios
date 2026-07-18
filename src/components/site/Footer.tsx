@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Github, MessagesSquare, Heart } from "lucide-react";
+import { Logo } from "./Logo";
 
 export function Footer() {
   return (
@@ -7,7 +8,7 @@ export function Footer() {
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:grid-cols-4">
         <div className="md:col-span-2">
           <div className="flex items-center gap-2.5">
-            <div className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-brand font-bold text-brand-foreground">RFL</div>
+            <Logo className="h-10 w-10" />
             <div>
               <div className="font-bold">RFL Studios</div>
               <div className="text-xs text-muted-foreground">by Radian Forge Labs</div>
@@ -36,7 +37,6 @@ export function Footer() {
           <h4 className="mb-3 text-sm font-semibold">Company</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/about" className="hover:text-foreground">About</Link></li>
-            
             <li><Link to="/support" className="hover:text-foreground">Support</Link></li>
           </ul>
         </div>

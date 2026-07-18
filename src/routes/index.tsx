@@ -5,6 +5,7 @@ import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Compass, Gamepad2, Github, Heart, MessagesSquare, Sparkles } from "lucide-react";
+import { Logo } from "@/components/site/Logo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,8 +40,8 @@ function Home() {
         <div className="absolute inset-0 bg-gradient-hero" />
         <div className="absolute inset-0 grid-bg opacity-30" />
         <div className="absolute -left-24 top-24 h-72 w-72 rounded-full bg-primary/25 blur-3xl animate-blob" />
-        <div className="absolute right-0 top-40 h-80 w-80 rounded-full bg-fuchsia-500/20 blur-3xl animate-blob" style={{ animationDelay: "2s" }} />
-        <div className="relative mx-auto max-w-7xl px-4 py-20 md:py-28">
+        <div className="absolute right-0 top-40 h-80 w-80 rounded-full bg-primary/20 blur-3xl animate-blob" style={{ animationDelay: "2s" }} />
+        <div className="relative mx-auto grid max-w-7xl gap-10 px-4 py-20 md:py-28 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center">
           <div className="max-w-3xl animate-fade-up">
             <span className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs text-muted-foreground">
               <Sparkles className="h-3.5 w-3.5 text-primary" /> Welcome to the RFL Studios portal
@@ -70,13 +71,10 @@ function Home() {
             </div>
           </div>
 
-          {/* Illustration area */}
-          <div className="pointer-events-none absolute right-6 top-1/2 hidden -translate-y-1/2 lg:block">
-            <div className="relative h-72 w-72">
-              <div className="absolute inset-0 rounded-3xl bg-gradient-brand opacity-30 blur-2xl" />
-              <div className="glass-strong shadow-glow relative grid h-full w-full place-items-center rounded-3xl">
-                <div className="text-8xl font-bold gradient-text animate-float">RFL</div>
-              </div>
+          <div className="pointer-events-none hidden justify-self-end lg:block">
+            <div className="relative h-80 w-80">
+              <div className="absolute inset-0 rounded-3xl bg-primary/25 blur-3xl" />
+              <Logo className="relative h-full w-full drop-shadow-[0_20px_60px_rgba(56,189,248,0.35)]" />
             </div>
           </div>
         </div>
