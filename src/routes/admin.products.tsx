@@ -131,7 +131,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Slug"><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder={slugify(name)} /></F>
               <F label="Kind">
                 <select value={kind} onChange={(e) => setKind(e.target.value)} className="w-full rounded-md border border-white/10 bg-transparent px-3 py-2 text-sm">
-                  <option value="app">App</option><option value="game">Game</option><option value="ai">AI</option>
+                  <option value="app">App</option><option value="game">Game</option>
                 </select>
               </F>
               <F label="Status">
