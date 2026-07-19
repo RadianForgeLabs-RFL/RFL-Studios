@@ -4,7 +4,7 @@ import { featuredProductsQuery, newsQuery, productListQuery, statsQuery } from "
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Compass, Gamepad2, Github, Heart, MessagesSquare, Sparkles } from "lucide-react";
+import { ArrowRight, Compass, Gamepad2, Heart, MessagesSquare, Sparkles } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 
 export const Route = createFileRoute("/")({
