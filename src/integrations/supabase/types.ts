@@ -249,6 +249,7 @@ export type Database = {
       products: {
         Row: {
           architectures: string[] | null
+          banner_opacity: number
           banner_url: string | null
           category_id: string | null
           changelog: string | null
@@ -288,6 +289,7 @@ export type Database = {
         }
         Insert: {
           architectures?: string[] | null
+          banner_opacity?: number
           banner_url?: string | null
           category_id?: string | null
           changelog?: string | null
@@ -327,6 +329,7 @@ export type Database = {
         }
         Update: {
           architectures?: string[] | null
+          banner_opacity?: number
           banner_url?: string | null
           category_id?: string | null
           changelog?: string | null
