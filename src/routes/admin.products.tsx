@@ -179,6 +179,24 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
                 qc.invalidateQueries({ queryKey: ["products"] });
               }} />
             </div>
+            <div>
+              <Label className="mb-2 block">Banner transparency ({Math.round(banner_opacity * 100)}%)</Label>
+              <input
+                type="range" min={0} max={1} step={0.05} value={banner_opacity}
+                onChange={async (e) => {
+                  const v = parseFloat(e.target.value);
+                  setBannerOpacity(v);
+                  if (productId) await supabase.from("products").update({ banner_opacity: v }).eq("id", productId);
+                  qc.invalidateQueries({ queryKey: ["products"] });
+                }}
+                className="w-full accent-primary"
+              />
+              {banner_url && (
+                <div className="relative mt-2 h-32 overflow-hidden rounded-lg border border-white/10 bg-black">
+                  <img src={banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: banner_opacity }} />
+                </div>
+              )}
+            </div>
             <ScreenshotsEditor productId={productId!} />
           </TabsContent>
 
