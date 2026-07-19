@@ -17,7 +17,6 @@ import { Route as GamesRouteImport } from './routes/games'
 import { Route as DownloadsRouteImport } from './routes/downloads'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppsRouteImport } from './routes/apps'
-import { Route as AiRouteImport } from './routes/ai'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
@@ -67,11 +66,6 @@ const AuthRoute = AuthRouteImport.update({
 const AppsRoute = AppsRouteImport.update({
   id: '/apps',
   path: '/apps',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AiRoute = AiRouteImport.update({
-  id: '/ai',
-  path: '/ai',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -128,7 +122,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
@@ -147,7 +140,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
@@ -169,7 +161,6 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/ai': typeof AiRoute
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
@@ -191,7 +182,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
-    | '/ai'
     | '/apps'
     | '/auth'
     | '/downloads'
@@ -210,7 +200,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
-    | '/ai'
     | '/apps'
     | '/auth'
     | '/downloads'
@@ -231,7 +220,6 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/about'
     | '/admin'
-    | '/ai'
     | '/apps'
     | '/auth'
     | '/downloads'
@@ -253,7 +241,6 @@ export interface RootRouteChildren {
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
-  AiRoute: typeof AiRoute
   AppsRoute: typeof AppsRoute
   AuthRoute: typeof AuthRoute
   DownloadsRoute: typeof DownloadsRoute
@@ -321,13 +308,6 @@ declare module '@tanstack/react-router' {
       path: '/apps'
       fullPath: '/apps'
       preLoaderRoute: typeof AppsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/ai': {
-      id: '/ai'
-      path: '/ai'
-      fullPath: '/ai'
-      preLoaderRoute: typeof AiRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -436,7 +416,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
-  AiRoute: AiRoute,
   AppsRoute: AppsRoute,
   AuthRoute: AuthRoute,
   DownloadsRoute: DownloadsRoute,
