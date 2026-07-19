@@ -60,9 +60,6 @@ function Home() {
                 <Link to="/games"><Gamepad2 className="mr-2 h-4 w-4" />Explore Games</Link>
               </Button>
               <Button asChild size="lg" variant="ghost">
-                <a href="https://github.com" target="_blank" rel="noreferrer"><Github className="mr-2 h-4 w-4" />GitHub</a>
-              </Button>
-              <Button asChild size="lg" variant="ghost">
                 <a href="https://discord.com" target="_blank" rel="noreferrer"><MessagesSquare className="mr-2 h-4 w-4" />Discord</a>
               </Button>
               <Button asChild size="lg" variant="ghost">
