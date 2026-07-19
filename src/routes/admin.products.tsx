@@ -91,13 +91,14 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
     setProductId(product?.id ?? null);
     setIconUrl(product?.icon_url ?? null);
     setBannerUrl(product?.banner_url ?? null);
+    setBannerOpacity(product?.banner_opacity ?? 0.4);
   }, [open, product]);
 
   const save = useMutation({
     mutationFn: async () => {
       const payload: any = {
         name, slug: slug || slugify(name), tagline, description, kind, status, source_type,
-        latest_version, featured, published, icon_url, banner_url,
+        latest_version, featured, published, icon_url, banner_url, banner_opacity,
       };
       if (productId) {
         const { error } = await supabase.from("products").update(payload).eq("id", productId);
