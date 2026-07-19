@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { StatusBadge } from "./StatusBadges";
 import type { Product } from "@/lib/data";
 
-const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "AI" };
+const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "Tool" };
 const KIND_GRADIENT: Record<string, string> = {
   app: "from-blue-500/30 to-cyan-400/20",
   game: "from-fuchsia-500/30 to-orange-400/20",
@@ -11,6 +11,7 @@ const KIND_GRADIENT: Record<string, string> = {
 };
 
 export function ProductCard({ p }: { p: Product }) {
+  const bannerOpacity = (p as any).banner_opacity ?? 0.55;
   return (
     <Link
       to="/products/$slug"
@@ -19,15 +20,29 @@ export function ProductCard({ p }: { p: Product }) {
     >
       <Card className="glass hover:shadow-glow overflow-hidden border-white/5 bg-transparent transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
         <div className={`relative h-32 overflow-hidden bg-gradient-to-br ${KIND_GRADIENT[p.kind]}`}>
-          <div className="absolute inset-0 grid-bg opacity-40" />
+          {p.banner_url && (
+            <img
+              src={p.banner_url}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              style={{ opacity: bannerOpacity }}
+            />
+          )}
+          <div className="absolute inset-0 grid-bg opacity-30" />
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="grid h-16 w-16 place-items-center rounded-2xl glass-strong text-2xl font-bold text-white shadow-glow">
-              {p.name.slice(0, 2).toUpperCase()}
-            </div>
+            {p.icon_url ? (
+              <div className="h-16 w-16 overflow-hidden rounded-2xl border border-white/20 glass-strong shadow-glow">
+                <img src={p.icon_url} alt={p.name} className="h-full w-full object-cover" />
+              </div>
+            ) : (
+              <div className="grid h-16 w-16 place-items-center rounded-2xl glass-strong text-2xl font-bold text-foreground shadow-glow">
+                {p.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
           </div>
           <div className="absolute right-2 top-2">
-            <span className="rounded-md bg-black/40 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white/90 backdrop-blur">
-              {KIND_LABEL[p.kind]}
+            <span className="rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white backdrop-blur">
+              {KIND_LABEL[p.kind] ?? p.kind}
             </span>
           </div>
         </div>
