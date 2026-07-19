@@ -1,0 +1,1 @@
+ALTER TABLE public.products ADD COLUMN IF NOT EXISTS banner_opacity numeric NOT NULL DEFAULT 0.4;

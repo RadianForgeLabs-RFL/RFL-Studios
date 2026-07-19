@@ -77,9 +77,9 @@ function ProductPage() {
         {p.banner_url ? (
           <>
             <div className="absolute inset-0">
-              <img src={p.banner_url} alt="" className="h-full w-full object-cover opacity-40" />
+              <img src={p.banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.4 }} />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
           </>
         ) : (
           <>

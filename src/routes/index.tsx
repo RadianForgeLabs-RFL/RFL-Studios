@@ -4,7 +4,7 @@ import { featuredProductsQuery, newsQuery, productListQuery, statsQuery } from "
 import { ProductCard } from "@/components/site/ProductCard";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Compass, Gamepad2, Github, Heart, MessagesSquare, Sparkles } from "lucide-react";
+import { ArrowRight, Compass, Gamepad2, Heart, MessagesSquare, Sparkles } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
 
 export const Route = createFileRoute("/")({
@@ -60,9 +60,6 @@ function Home() {
                 <Link to="/games"><Gamepad2 className="mr-2 h-4 w-4" />Explore Games</Link>
               </Button>
               <Button asChild size="lg" variant="ghost">
-                <a href="https://github.com" target="_blank" rel="noreferrer"><Github className="mr-2 h-4 w-4" />GitHub</a>
-              </Button>
-              <Button asChild size="lg" variant="ghost">
                 <a href="https://discord.com" target="_blank" rel="noreferrer"><MessagesSquare className="mr-2 h-4 w-4" />Discord</a>
               </Button>
               <Button asChild size="lg" variant="ghost">
@@ -82,10 +79,9 @@ function Home() {
 
       {/* STATS */}
       <section className="mx-auto -mt-8 max-w-7xl px-4">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3">
           <StatCard label="Apps" value={s.apps_published ?? 0} />
           <StatCard label="Games" value={s.games_published ?? 0} />
-          <StatCard label="Open Source" value={s.open_source_projects ?? 0} />
         </div>
       </section>
 
@@ -128,25 +124,19 @@ function Home() {
         </div>
       </section>
 
-      {/* COMMUNITY / DEV / OSS */}
+      {/* COMMUNITY */}
       <section id="donate" className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2">
           <Card className="glass border-white/5 bg-transparent p-8">
             <MessagesSquare className="h-8 w-8 text-primary" />
             <h3 className="mt-4 text-xl font-semibold">Community</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Join thousands of players, developers, and researchers on our Discord.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Join thousands of players and users on our Discord.</p>
             <Button asChild variant="outline" className="mt-4 border-white/10 glass"><a href="https://discord.com">Join Discord</a></Button>
-          </Card>
-          <Card className="glass border-white/5 bg-transparent p-8">
-            <Github className="h-8 w-8 text-primary" />
-            <h3 className="mt-4 text-xl font-semibold">Developers</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Contribute to open-source RFL projects and build the next chapter with us.</p>
-            <Button asChild variant="outline" className="mt-4 border-white/10 glass"><a href="https://github.com">View GitHub</a></Button>
           </Card>
           <Card className="glass border-white/5 bg-transparent p-8">
             <Heart className="h-8 w-8 text-primary" />
             <h3 className="mt-4 text-xl font-semibold">Support Us</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Every donation keeps our open-source work independent and free.</p>
+            <p className="mt-2 text-sm text-muted-foreground">Every contribution keeps RFL Studios shipping new apps and games.</p>
             <Button asChild className="mt-4 bg-gradient-brand text-brand-foreground shadow-glow"><a href="#">Donate</a></Button>
           </Card>
         </div>

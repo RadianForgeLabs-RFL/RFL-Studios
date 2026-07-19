@@ -82,6 +82,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
   const [published, setPublished] = useState(product?.published ?? true);
   const [icon_url, setIconUrl] = useState<string | null>(product?.icon_url ?? null);
   const [banner_url, setBannerUrl] = useState<string | null>(product?.banner_url ?? null);
+  const [banner_opacity, setBannerOpacity] = useState<number>(product?.banner_opacity ?? 0.4);
   const [productId, setProductId] = useState<string | null>(product?.id ?? null);
   const qc = useQueryClient();
 
@@ -90,13 +91,14 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
     setProductId(product?.id ?? null);
     setIconUrl(product?.icon_url ?? null);
     setBannerUrl(product?.banner_url ?? null);
+    setBannerOpacity(product?.banner_opacity ?? 0.4);
   }, [open, product]);
 
   const save = useMutation({
     mutationFn: async () => {
       const payload: any = {
         name, slug: slug || slugify(name), tagline, description, kind, status, source_type,
-        latest_version, featured, published, icon_url, banner_url,
+        latest_version, featured, published, icon_url, banner_url, banner_opacity,
       };
       if (productId) {
         const { error } = await supabase.from("products").update(payload).eq("id", productId);
@@ -131,7 +133,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Slug"><Input value={slug} onChange={(e) => setSlug(e.target.value)} placeholder={slugify(name)} /></F>
               <F label="Kind">
                 <select value={kind} onChange={(e) => setKind(e.target.value)} className="w-full rounded-md border border-white/10 bg-transparent px-3 py-2 text-sm">
-                  <option value="app">App</option><option value="game">Game</option><option value="ai">AI</option>
+                  <option value="app">App</option><option value="game">Game</option>
                 </select>
               </F>
               <F label="Status">
@@ -176,6 +178,24 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
                 if (productId) await supabase.from("products").update({ banner_url: url }).eq("id", productId);
                 qc.invalidateQueries({ queryKey: ["products"] });
               }} />
+            </div>
+            <div>
+              <Label className="mb-2 block">Banner transparency ({Math.round(banner_opacity * 100)}%)</Label>
+              <input
+                type="range" min={0} max={1} step={0.05} value={banner_opacity}
+                onChange={async (e) => {
+                  const v = parseFloat(e.target.value);
+                  setBannerOpacity(v);
+                  if (productId) await supabase.from("products").update({ banner_opacity: v }).eq("id", productId);
+                  qc.invalidateQueries({ queryKey: ["products"] });
+                }}
+                className="w-full accent-primary"
+              />
+              {banner_url && (
+                <div className="relative mt-2 h-32 overflow-hidden rounded-lg border border-white/10 bg-black">
+                  <img src={banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: banner_opacity }} />
+                </div>
+              )}
             </div>
             <ScreenshotsEditor productId={productId!} />
           </TabsContent>

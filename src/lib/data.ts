@@ -23,6 +23,7 @@ export type Product = {
   architectures: string[] | null;
   icon_url: string | null;
   banner_url: string | null;
+  banner_opacity: number | null;
   trailer_url: string | null;
   latest_version: string | null;
   release_date: string | null;
