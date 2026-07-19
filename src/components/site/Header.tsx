@@ -14,7 +14,6 @@ const NAV = [
   { to: "/", label: "Home" },
   { to: "/apps", label: "Apps" },
   { to: "/games", label: "Games" },
-  { to: "/ai", label: "AI" },
   { to: "/projects", label: "Projects" },
   { to: "/downloads", label: "Downloads" },
   { to: "/about", label: "About" },
