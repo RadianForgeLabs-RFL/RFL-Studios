@@ -82,6 +82,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
   const [published, setPublished] = useState(product?.published ?? true);
   const [icon_url, setIconUrl] = useState<string | null>(product?.icon_url ?? null);
   const [banner_url, setBannerUrl] = useState<string | null>(product?.banner_url ?? null);
+  const [banner_opacity, setBannerOpacity] = useState<number>(product?.banner_opacity ?? 0.4);
   const [productId, setProductId] = useState<string | null>(product?.id ?? null);
   const qc = useQueryClient();
 
