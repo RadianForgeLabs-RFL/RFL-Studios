@@ -57,20 +57,34 @@ export const productListQuery = (kind?: ProductKind | "all") =>
     },
   });
 
-export const featuredProductsQuery = () =>
+export const adminProductListQuery = () =>
   queryOptions({
-    queryKey: ["products", "featured"],
+    queryKey: ["products", "admin-all"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
         .select("*")
-        .eq("featured", true)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return (data ?? []) as unknown as Product[];
+    },
+  });
+
+export const comingSoonProductsQuery = () =>
+  queryOptions({
+    queryKey: ["products", "coming-soon"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("coming_soon", true)
         .eq("published", true)
         .order("homepage_order");
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
   });
+
 
 export const productBySlugQuery = (slug: string) =>
   queryOptions({
