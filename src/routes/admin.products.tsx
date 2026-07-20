@@ -98,7 +98,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
     mutationFn: async () => {
       const payload: any = {
         name, slug: slug || slugify(name), tagline, description, kind, status, source_type,
-        latest_version, featured, published, icon_url, banner_url, banner_opacity,
+        latest_version, coming_soon, published, icon_url, banner_url, banner_opacity,
       };
       if (productId) {
         const { error } = await supabase.from("products").update(payload).eq("id", productId);
