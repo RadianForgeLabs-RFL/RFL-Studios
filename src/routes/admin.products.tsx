@@ -22,7 +22,7 @@ const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-"
 
 function AdminProducts() {
   const qc = useQueryClient();
-  const { data } = useQuery(productListQuery("all"));
+  const { data } = useQuery(adminProductListQuery());
 
   const del = useMutation({
     mutationFn: async (id: string) => {
