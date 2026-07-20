@@ -19,7 +19,6 @@ function AdminDashboard() {
         totalProducts: products.data?.length ?? 0,
         apps: products.data?.filter((p: any) => p.kind === "app").length ?? 0,
         games: products.data?.filter((p: any) => p.kind === "game").length ?? 0,
-        ai: products.data?.filter((p: any) => p.kind === "ai").length ?? 0,
         published: products.data?.filter((p: any) => p.published).length ?? 0,
         news: news.data?.length ?? 0,
       };
@@ -28,9 +27,10 @@ function AdminDashboard() {
   const s = stats.data;
 
   const cards = [
-    ["Products", s?.totalProducts], ["Apps", s?.apps], ["Games", s?.games], ["AI Tools", s?.ai],
+    ["Products", s?.totalProducts], ["Apps", s?.apps], ["Games", s?.games],
     ["Published", s?.published], ["News posts", s?.news],
   ];
+
 
   return (
     <div>

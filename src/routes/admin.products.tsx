@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { productListQuery } from "@/lib/data";
+import { adminProductListQuery } from "@/lib/data";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ const slugify = (s: string) => s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-"
 
 function AdminProducts() {
   const qc = useQueryClient();
-  const { data } = useQuery(productListQuery("all"));
+  const { data } = useQuery(adminProductListQuery());
 
   const del = useMutation({
     mutationFn: async (id: string) => {
@@ -38,7 +38,7 @@ function AdminProducts() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground">Manage apps, games, and AI tools.</p>
+          <p className="text-muted-foreground">Manage apps and games.</p>
         </div>
         <ProductDialog trigger={<Button className="bg-gradient-brand text-brand-foreground shadow-glow"><Plus className="mr-2 h-4 w-4" />New product</Button>} />
       </div>
@@ -78,7 +78,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
   const [status, setStatus] = useState(product?.status ?? "stable");
   const [source_type, setSourceType] = useState(product?.source_type ?? "closed_source");
   const [latest_version, setVersion] = useState(product?.latest_version ?? "1.0.0");
-  const [featured, setFeatured] = useState(product?.featured ?? false);
+  const [coming_soon, setComingSoon] = useState(product?.coming_soon ?? false);
   const [published, setPublished] = useState(product?.published ?? true);
   const [icon_url, setIconUrl] = useState<string | null>(product?.icon_url ?? null);
   const [banner_url, setBannerUrl] = useState<string | null>(product?.banner_url ?? null);
@@ -98,7 +98,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
     mutationFn: async () => {
       const payload: any = {
         name, slug: slug || slugify(name), tagline, description, kind, status, source_type,
-        latest_version, featured, published, icon_url, banner_url, banner_opacity,
+        latest_version, coming_soon, published, icon_url, banner_url, banner_opacity,
       };
       if (productId) {
         const { error } = await supabase.from("products").update(payload).eq("id", productId);
@@ -152,7 +152,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Tagline" className="md:col-span-2"><Input value={tagline} onChange={(e) => setTagline(e.target.value)} /></F>
               <F label="Description" className="md:col-span-2"><Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} /></F>
               <div className="flex gap-6 md:col-span-2">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />Featured</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={coming_soon} onChange={(e) => setComingSoon(e.target.checked)} />Coming Soon</label>
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />Published</label>
               </div>
             </div>

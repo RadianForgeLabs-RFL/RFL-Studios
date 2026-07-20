@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download } from "lucide-react";
 
 export const Route = createFileRoute("/downloads")({
-  head: () => ({ meta: [{ title: "Downloads — RFL Studios" }, { name: "description", content: "Download apps, games, and AI tools for Windows, Linux, Mac, and Android." }] }),
+  head: () => ({ meta: [{ title: "Downloads — RFL Studios" }, { name: "description", content: "Download apps and games for Windows, Linux, Mac, and Android." }] }),
   component: Downloads,
 });
 

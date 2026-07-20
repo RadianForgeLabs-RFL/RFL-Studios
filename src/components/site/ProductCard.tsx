@@ -40,11 +40,17 @@ export function ProductCard({ p }: { p: Product }) {
               </div>
             )}
           </div>
-          <div className="absolute right-2 top-2">
-            <span className="rounded-md bg-black/50 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white backdrop-blur">
+          <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+            <span className="rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white backdrop-blur">
               {KIND_LABEL[p.kind] ?? p.kind}
             </span>
+            {(p as any).coming_soon && (
+              <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground shadow">
+                Coming Soon
+              </span>
+            )}
           </div>
+
         </div>
         <div className="p-4">
           <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>

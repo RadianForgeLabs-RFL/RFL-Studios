@@ -8,7 +8,7 @@ export const Route = createFileRoute("/about")({
       <h1 className="text-4xl font-bold md:text-5xl gradient-text">About RFL Studios</h1>
       <p className="mt-4 text-lg text-muted-foreground">
         RFL Studios is the official portal for <strong className="text-foreground">Radian Forge Labs</strong> — an independent
-        research and engineering studio building games, apps, AI tools, and open software.
+        research and engineering studio building games and apps.
       </p>
       <div className="mt-10 grid gap-6 md:grid-cols-2">
         <Card className="glass border-white/5 bg-transparent p-6">
