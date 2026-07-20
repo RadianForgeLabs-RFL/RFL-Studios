@@ -111,12 +111,17 @@ function ProductPage() {
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2">
-              <Button size="lg" className="bg-gradient-brand text-brand-foreground shadow-glow"><Download className="mr-2 h-4 w-4" />Download v{p.latest_version}</Button>
+              {p.coming_soon ? (
+                <PreorderButton productId={p.id} size="lg" />
+              ) : (
+                <Button size="lg" className="bg-gradient-brand text-brand-foreground shadow-glow"><Download className="mr-2 h-4 w-4" />Download v{p.latest_version}</Button>
+              )}
               <Button size="sm" variant="outline" className="border-white/10 glass" onClick={() => toggleFav.mutate()}>
                 <Heart className={`mr-2 h-4 w-4 ${favorited ? "fill-pink-400 stroke-pink-400" : ""}`} />
                 {favorited ? "Favorited" : "Add to favorites"}
               </Button>
             </div>
+
           </div>
           <div className="mt-6 flex flex-wrap gap-1.5">
             <StatusBadge value={p.status} />
