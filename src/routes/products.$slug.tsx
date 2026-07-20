@@ -12,6 +12,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
+import { PreorderButton } from "@/components/site/PreorderButton";
+
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
