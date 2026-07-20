@@ -38,7 +38,7 @@ function AdminProducts() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Products</h1>
-          <p className="text-muted-foreground">Manage apps, games, and AI tools.</p>
+          <p className="text-muted-foreground">Manage apps and games.</p>
         </div>
         <ProductDialog trigger={<Button className="bg-gradient-brand text-brand-foreground shadow-glow"><Plus className="mr-2 h-4 w-4" />New product</Button>} />
       </div>
