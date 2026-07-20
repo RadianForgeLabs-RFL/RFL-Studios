@@ -78,7 +78,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
   const [status, setStatus] = useState(product?.status ?? "stable");
   const [source_type, setSourceType] = useState(product?.source_type ?? "closed_source");
   const [latest_version, setVersion] = useState(product?.latest_version ?? "1.0.0");
-  const [featured, setFeatured] = useState(product?.featured ?? false);
+  const [coming_soon, setComingSoon] = useState(product?.coming_soon ?? false);
   const [published, setPublished] = useState(product?.published ?? true);
   const [icon_url, setIconUrl] = useState<string | null>(product?.icon_url ?? null);
   const [banner_url, setBannerUrl] = useState<string | null>(product?.banner_url ?? null);
