@@ -216,6 +216,38 @@ export type Database = {
         }
         Relationships: []
       }
+      preorders: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          product_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          product_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          product_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "preorders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       product_tags: {
         Row: {
           product_id: string
@@ -253,6 +285,7 @@ export type Database = {
           banner_url: string | null
           category_id: string | null
           changelog: string | null
+          coming_soon: boolean
           created_at: string
           dependencies: string[] | null
           description: string | null
@@ -293,6 +326,7 @@ export type Database = {
           banner_url?: string | null
           category_id?: string | null
           changelog?: string | null
+          coming_soon?: boolean
           created_at?: string
           dependencies?: string[] | null
           description?: string | null
@@ -333,6 +367,7 @@ export type Database = {
           banner_url?: string | null
           category_id?: string | null
           changelog?: string | null
+          coming_soon?: boolean
           created_at?: string
           dependencies?: string[] | null
           description?: string | null
