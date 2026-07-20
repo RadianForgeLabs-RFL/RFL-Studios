@@ -35,9 +35,11 @@ export type Product = {
   documentation_url: string | null;
   source_url: string | null;
   featured: boolean;
+  coming_soon: boolean;
   published: boolean;
   download_count: number;
   rating_avg: number;
+
   rating_count: number;
   created_at: string;
   updated_at: string;
