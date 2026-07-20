@@ -152,7 +152,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Tagline" className="md:col-span-2"><Input value={tagline} onChange={(e) => setTagline(e.target.value)} /></F>
               <F label="Description" className="md:col-span-2"><Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} /></F>
               <div className="flex gap-6 md:col-span-2">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />Featured</label>
+                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={coming_soon} onChange={(e) => setComingSoon(e.target.checked)} />Coming Soon</label>
                 <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />Published</label>
               </div>
             </div>
