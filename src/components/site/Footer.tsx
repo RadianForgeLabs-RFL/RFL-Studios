@@ -15,8 +15,9 @@ export function Footer() {
             </div>
           </div>
           <p className="mt-4 max-w-md text-sm text-muted-foreground">
-            Creating games, apps, AI tools and open software. A single home for every project we ship.
+            Creating games and apps. A single home for every project we ship.
           </p>
+
           <div className="mt-4 flex gap-2">
             <a href="https://github.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-primary"><Github className="h-4 w-4" /></a>
             <a href="https://discord.com" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-primary"><MessagesSquare className="h-4 w-4" /></a>
