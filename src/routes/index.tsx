@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { featuredProductsQuery, newsQuery, productListQuery, statsQuery } from "@/lib/data";
+import { comingSoonProductsQuery, newsQuery, productListQuery, statsQuery } from "@/lib/data";
 import { ProductCard } from "@/components/site/ProductCard";
+import { PreorderButton } from "@/components/site/PreorderButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Compass, Gamepad2, Heart, MessagesSquare, Sparkles } from "lucide-react";
@@ -10,8 +11,8 @@ import { Logo } from "@/components/site/Logo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "RFL Studios — Apps, Games, AI & Open Software" },
-      { name: "description", content: "Explore apps, games, AI tools and open-source projects by Radian Forge Labs." },
+      { title: "RFL Studios — Apps & Games by Radian Forge Labs" },
+      { name: "description", content: "Explore apps, games and software by Radian Forge Labs." },
     ],
   }),
   component: Home,
@@ -27,7 +28,7 @@ function StatCard({ label, value }: { label: string; value: string | number }) {
 }
 
 function Home() {
-  const featured = useQuery(featuredProductsQuery());
+  const comingSoon = useQuery(comingSoonProductsQuery());
   const latest = useQuery(productListQuery("all"));
   const news = useQuery(newsQuery());
   const stats = useQuery(statsQuery());
@@ -50,7 +51,7 @@ function Home() {
               <span className="gradient-text">RFL Studios</span>
             </h1>
             <p className="mt-4 max-w-2xl text-lg text-muted-foreground md:text-xl">
-              Creating games, apps, AI tools and open software. A unified home for every project we ship.
+              Creating games and apps. A unified home for every project we ship.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-gradient-brand text-brand-foreground shadow-glow hover:opacity-90">
@@ -58,9 +59,6 @@ function Home() {
               </Button>
               <Button asChild size="lg" variant="outline" className="border-white/10 glass">
                 <Link to="/games"><Gamepad2 className="mr-2 h-4 w-4" />Explore Games</Link>
-              </Button>
-              <Button asChild size="lg" variant="ghost">
-                <a href="https://discord.com" target="_blank" rel="noreferrer"><MessagesSquare className="mr-2 h-4 w-4" />Discord</a>
               </Button>
               <Button asChild size="lg" variant="ghost">
                 <a href="#donate"><Heart className="mr-2 h-4 w-4" />Donate</a>
@@ -85,25 +83,52 @@ function Home() {
         </div>
       </section>
 
-      {/* FEATURED */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-6 flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-bold">Featured Products</h2>
-            <p className="text-sm text-muted-foreground">Hand-picked from across the RFL ecosystem.</p>
+      {/* COMING SOON */}
+      {(comingSoon.data ?? []).length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16">
+          <div className="mb-6 flex items-end justify-between">
+            <div>
+              <h2 className="text-3xl font-bold">Coming Soon</h2>
+              <p className="text-sm text-muted-foreground">Pre-order to be notified the moment we launch.</p>
+            </div>
           </div>
-          <Button asChild variant="ghost" size="sm"><Link to="/projects">All projects <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {(featured.data ?? []).map((p) => <ProductCard key={p.id} p={p} />)}
-        </div>
-      </section>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {(comingSoon.data ?? []).map((p) => (
+              <Card key={p.id} className="glass overflow-hidden border-white/5 bg-transparent">
+                <div className="relative h-40 overflow-hidden bg-gradient-to-br from-primary/25 to-primary/5">
+                  {p.banner_url && (
+                    <img src={p.banner_url} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.55 }} />
+                  )}
+                  <div className="absolute right-2 top-2 rounded-md bg-black/60 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">Coming Soon</div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    {p.icon_url ? (
+                      <img src={p.icon_url} alt={p.name} className="h-20 w-20 rounded-2xl border border-white/20 object-cover shadow-glow" />
+                    ) : (
+                      <div className="grid h-20 w-20 place-items-center rounded-2xl glass-strong text-2xl font-bold">{p.name.slice(0, 2).toUpperCase()}</div>
+                    )}
+                  </div>
+                </div>
+                <div className="p-5">
+                  <Link to="/products/$slug" params={{ slug: p.slug }} className="text-lg font-semibold hover:text-primary">{p.name}</Link>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
+                  <div className="mt-4">
+                    <PreorderButton productId={p.id} />
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* LATEST RELEASES */}
       <section className="mx-auto max-w-7xl px-4 py-8">
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold">Latest Releases</h2>
-          <p className="text-sm text-muted-foreground">Fresh out of the forge.</p>
+        <div className="mb-6 flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">Latest Releases</h2>
+            <p className="text-sm text-muted-foreground">Fresh out of the forge.</p>
+          </div>
+          <Button asChild variant="ghost" size="sm"><Link to="/projects">All projects <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {(latest.data ?? []).slice(0, 8).map((p) => <ProductCard key={p.id} p={p} />)}
@@ -124,14 +149,14 @@ function Home() {
         </div>
       </section>
 
-      {/* COMMUNITY */}
+      {/* SUPPORT */}
       <section id="donate" className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="glass border-white/5 bg-transparent p-8">
             <MessagesSquare className="h-8 w-8 text-primary" />
-            <h3 className="mt-4 text-xl font-semibold">Community</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Join thousands of players and users on our Discord.</p>
-            <Button asChild variant="outline" className="mt-4 border-white/10 glass"><a href="https://discord.com">Join Discord</a></Button>
+            <h3 className="mt-4 text-xl font-semibold">Get in touch</h3>
+            <p className="mt-2 text-sm text-muted-foreground">Have a question or feedback? Send us a message.</p>
+            <Button asChild variant="outline" className="mt-4 border-white/10 glass"><Link to="/support">Contact support</Link></Button>
           </Card>
           <Card className="glass border-white/5 bg-transparent p-8">
             <Heart className="h-8 w-8 text-primary" />
