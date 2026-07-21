@@ -1,0 +1,75 @@
+import { Link } from "@tanstack/react-router";
+import { Card } from "@/components/ui/card";
+import { StatusBadge } from "./StatusBadges";
+import { PreorderButton } from "./PreorderButton";
+import type { Product } from "@/lib/data";
+
+const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "Tool" };
+const KIND_GRADIENT: Record<string, string> = {
+  app: "from-blue-500/30 to-cyan-400/20",
+  game: "from-fuchsia-500/30 to-orange-400/20",
+  ai: "from-emerald-500/30 to-teal-400/20",
+};
+
+export function ProductCard({ p }: { p: Product }) {
+  const bannerOpacity = (p as any).banner_opacity ?? 0.55;
+  return (
+    <Link
+      to="/products/$slug"
+      params={{ slug: p.slug }}
+      className="group block animate-fade-up"
+    >
+      <Card className="glass hover:shadow-glow overflow-hidden border-white/5 bg-transparent transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
+        <div className={`relative h-32 overflow-hidden bg-gradient-to-br ${KIND_GRADIENT[p.kind]}`}>
+          {p.banner_url && (
+            <img
+              src={p.banner_url}
+              alt=""
+              className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              style={{ opacity: bannerOpacity }}
+            />
+          )}
+          <div className="absolute inset-0 grid-bg opacity-30" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            {p.icon_url ? (
+              <div className="h-16 w-16 overflow-hidden rounded-2xl border border-white/20 glass-strong shadow-glow">
+                <img src={p.icon_url} alt={p.name} className="h-full w-full object-cover" />
+              </div>
+            ) : (
+              <div className="grid h-16 w-16 place-items-center rounded-2xl glass-strong text-2xl font-bold text-foreground shadow-glow">
+                {p.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <div className="absolute right-2 top-2 flex flex-col items-end gap-1">
+            <span className="rounded-md bg-black/60 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-white backdrop-blur">
+              {KIND_LABEL[p.kind] ?? p.kind}
+            </span>
+            {(p as any).coming_soon && (
+              <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground shadow">
+                Coming Soon
+              </span>
+            )}
+          </div>
+
+        </div>
+        <div className="p-4">
+          <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>
+          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
+          <div className="mt-3 flex flex-wrap items-center gap-1.5">
+            <StatusBadge value={p.status} />
+            <StatusBadge value={p.source_type} />
+          </div>
+          {(p as any).coming_soon && (
+            <div className="mt-3" onClick={(e) => e.stopPropagation()}>
+              <PreorderButton productId={p.id} slug={p.slug} />
+            </div>
+          )}
+          {p.latest_version && !(p as any).coming_soon && (
+            <div className="mt-3 text-xs text-muted-foreground">v{p.latest_version}</div>
+          )}
+        </div>
+      </Card>
+    </Link>
+  );
+}
