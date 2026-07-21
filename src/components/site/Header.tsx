@@ -4,11 +4,12 @@ import { useAuth, useIsAdmin } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, ShieldCheck, User as UserIcon, Menu } from "lucide-react";
+import { LogOut, ShieldCheck, User as UserIcon, Menu, Coffee } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "./ThemeToggle";
 import { Logo } from "./Logo";
+import { SupportModal } from "./SupportModal";
 
 const NAV = [
   { to: "/", label: "Home" },
@@ -57,6 +58,14 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <SupportModal
+            trigger={
+              <Button size="sm" variant="outline" className="hidden gap-1.5 border-primary/40 bg-primary/10 text-foreground hover:bg-primary/20 md:inline-flex">
+                <Coffee className="h-4 w-4 text-primary" />
+                <span className="hidden md:inline">Buy Me a Coffee</span>
+              </Button>
+            }
+          />
           <ThemeToggle />
           {user ? (
             <DropdownMenu>
@@ -93,6 +102,15 @@ export function Header() {
                     {n.label}
                   </Link>
                 ))}
+                <div className="mt-4 border-t border-white/10 pt-4">
+                  <SupportModal
+                    trigger={
+                      <Button className="w-full bg-gradient-brand text-brand-foreground shadow-glow">
+                        <Coffee className="mr-2 h-4 w-4" /> Buy Me a Coffee
+                      </Button>
+                    }
+                  />
+                </div>
               </nav>
             </SheetContent>
           </Sheet>

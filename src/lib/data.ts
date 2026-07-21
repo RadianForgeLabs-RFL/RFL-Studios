@@ -39,17 +39,22 @@ export type Product = {
   published: boolean;
   download_count: number;
   rating_avg: number;
-
   rating_count: number;
   created_at: string;
   updated_at: string;
 };
 
+// Released products only (published AND not coming soon)
 export const productListQuery = (kind?: ProductKind | "all") =>
   queryOptions({
-    queryKey: ["products", kind ?? "all"],
+    queryKey: ["products", "released", kind ?? "all"],
     queryFn: async () => {
-      let q = supabase.from("products").select("*").eq("published", true).order("homepage_order");
+      let q = supabase
+        .from("products")
+        .select("*")
+        .eq("published", true)
+        .eq("coming_soon", false)
+        .order("homepage_order");
       if (kind && kind !== "all") q = q.eq("kind", kind);
       const { data, error } = await q;
       if (error) throw error;
@@ -78,13 +83,11 @@ export const comingSoonProductsQuery = () =>
         .from("products")
         .select("*")
         .eq("coming_soon", true)
-        .eq("published", true)
         .order("homepage_order");
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
   });
-
 
 export const productBySlugQuery = (slug: string) =>
   queryOptions({
@@ -145,12 +148,21 @@ export const announcementQuery = () =>
     },
   });
 
-export const statsQuery = () =>
+// Live counts from products (excludes coming-soon from the "released" tally)
+export const homeCountsQuery = () =>
   queryOptions({
-    queryKey: ["stats"],
+    queryKey: ["home-counts"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("settings").select("value").eq("key", "stats").maybeSingle();
+      const { data, error } = await supabase
+        .from("products")
+        .select("kind, coming_soon, published")
+        .eq("published", true)
+        .eq("coming_soon", false);
       if (error) throw error;
-      return (data?.value ?? {}) as Record<string, number>;
+      const rows = data ?? [];
+      return {
+        apps: rows.filter((r: any) => r.kind === "app").length,
+        games: rows.filter((r: any) => r.kind === "game").length,
+      };
     },
   });
