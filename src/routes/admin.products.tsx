@@ -151,9 +151,34 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Version"><Input value={latest_version} onChange={(e) => setVersion(e.target.value)} /></F>
               <F label="Tagline" className="md:col-span-2"><Input value={tagline} onChange={(e) => setTagline(e.target.value)} /></F>
               <F label="Description" className="md:col-span-2"><Textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} /></F>
-              <div className="flex gap-6 md:col-span-2">
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={coming_soon} onChange={(e) => setComingSoon(e.target.checked)} />Coming Soon</label>
-                <label className="flex items-center gap-2 text-sm"><input type="checkbox" checked={published} onChange={(e) => setPublished(e.target.checked)} />Published</label>
+              <div className="md:col-span-2">
+                <Label className="mb-2 block">Release status</Label>
+                <div className="glass inline-flex items-center gap-1 rounded-full border border-white/10 p-1">
+                  <button
+                    type="button"
+                    onClick={() => { setComingSoon(false); setPublished(true); }}
+                    className={`rounded-full px-4 py-1.5 text-sm transition ${!coming_soon && published ? "bg-gradient-brand text-brand-foreground shadow-glow" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    Released
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setComingSoon(true); setPublished(true); }}
+                    className={`rounded-full px-4 py-1.5 text-sm transition ${coming_soon && published ? "bg-gradient-brand text-brand-foreground shadow-glow" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    Coming Soon
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => { setPublished(false); }}
+                    className={`rounded-full px-4 py-1.5 text-sm transition ${!published ? "bg-white/15 text-foreground" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    Draft
+                  </button>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Released shows in Apps/Games listings. Coming Soon shows only in the Coming Soon section with a pre-order button. Draft hides it from the public.
+                </p>
               </div>
             </div>
             <Button onClick={() => save.mutate()} disabled={save.isPending} className="mt-4 bg-gradient-brand text-brand-foreground shadow-glow">
