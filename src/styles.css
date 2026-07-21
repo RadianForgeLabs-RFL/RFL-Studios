@@ -148,14 +148,11 @@
   }
   h1,h2,h3,h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
   ::selection { background: oklch(0.74 0.19 235 / 0.35); }
-<<<<<<< HEAD
   
   select, option {
     background-color: var(--color-background);
     color: var(--color-foreground);
   }
-=======
->>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
 }
 
 @utility glass {
