@@ -116,6 +116,7 @@ export function Header() {
           </Sheet>
         </div>
       </div>
+      <script src="https://keepandroidopen.org/banner.js?size=minimal&animation=off"></script>
     </header>
   );
 }
