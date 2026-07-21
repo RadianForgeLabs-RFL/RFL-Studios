@@ -1,16 +1,30 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+<<<<<<< HEAD
 import { useQuery } from "@tanstack/react-query";
+=======
+import { useQuery, useMutation } from "@tanstack/react-query";
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
 import { productBySlugQuery } from "@/lib/data";
 import { StatusBadge } from "@/components/site/StatusBadges";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
+<<<<<<< HEAD
 import { Download, ExternalLink, Github, FileCode, Share2, Calendar, User, Building, Shield, Tag, HardDrive, Cpu } from "lucide-react";
 import { toast } from "sonner";
 import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
 import { PreorderButton } from "@/components/site/PreorderButton";
 import { useState } from "react";
+=======
+import { Download, Heart, ExternalLink, Github, FileCode, Share2 } from "lucide-react";
+import { useAuth } from "@/lib/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
+import { PreorderButton } from "@/components/site/PreorderButton";
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
@@ -43,13 +57,38 @@ const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "Tool
 function ProductPage() {
   const { slug } = Route.useParams();
   const { data: p } = useQuery(productBySlugQuery(slug));
+<<<<<<< HEAD
   const [activeTab, setActiveTab] = useState("overview");
+=======
+  const { user } = useAuth();
+  const [favorited, setFavorited] = useState(false);
+
+  useEffect(() => {
+    if (!user || !p?.id) { setFavorited(false); return; }
+    supabase.from("favorites").select("product_id").eq("user_id", user.id).eq("product_id", p.id).maybeSingle()
+      .then(({ data }) => setFavorited(!!data));
+  }, [user, p?.id]);
+
+  const toggleFav = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Please sign in to save favorites.");
+      if (favorited) {
+        await supabase.from("favorites").delete().eq("user_id", user.id).eq("product_id", p.id);
+      } else {
+        await supabase.from("favorites").insert({ user_id: user.id, product_id: p.id });
+      }
+    },
+    onSuccess: () => { setFavorited(!favorited); toast.success(favorited ? "Removed from favorites" : "Added to favorites"); },
+    onError: (e: Error) => toast.error(e.message),
+  });
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
 
   if (!p) return <div className="p-12 text-center text-muted-foreground">Loading…</div>;
 
   const downloads: any[] = p.downloads ?? [];
   const versions: any[] = p.versions ?? [];
   const screenshots: any[] = p.screenshots ?? [];
+<<<<<<< HEAD
   
   // Detect user's platform
   const detectPlatform = (): string => {
@@ -113,6 +152,12 @@ function ProductPage() {
       setActiveTab("downloads");
       toast.info(`No download available for ${userPlatform}. See all downloads below.`);
     }
+=======
+  const primaryDl = downloads.find((d) => d.is_primary) ?? downloads[0];
+  const share = async () => {
+    try { await navigator.share?.({ title: p.name, url: window.location.href }); }
+    catch { /* ignore */ }
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
   };
 
   return (
@@ -163,6 +208,7 @@ function ProductPage() {
                 {p.coming_soon ? (
                   <PreorderButton productId={p.id} size="lg" className="min-w-40" />
                 ) : primaryDl ? (
+<<<<<<< HEAD
                   !platformDl ? (
                     <Button
                       size="lg"
@@ -183,6 +229,22 @@ function ProductPage() {
                 )}
                 <Button size="lg" variant="outline" className="border-white/10 glass" onClick={share}>
                   <Share2 className="mr-2 h-4 w-4" /> Share
+=======
+                  <Button asChild size="lg" className="min-w-40 bg-gradient-brand text-brand-foreground shadow-glow">
+                    <a href={primaryDl.url} target="_blank" rel="noreferrer">
+                      <Download className="mr-2 h-4 w-4" /> Get
+                    </a>
+                  </Button>
+                ) : (
+                  <Button size="lg" disabled className="min-w-40">No downloads yet</Button>
+                )}
+                <Button size="lg" variant="outline" className="border-white/10 glass" onClick={() => toggleFav.mutate()}>
+                  <Heart className={`mr-2 h-4 w-4 ${favorited ? "fill-pink-400 stroke-pink-400" : ""}`} />
+                  {favorited ? "Saved" : "Save"}
+                </Button>
+                <Button size="lg" variant="ghost" onClick={share}>
+                  <Share2 className="h-4 w-4" />
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
                 </Button>
               </div>
 
@@ -197,7 +259,11 @@ function ProductPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-10">
+<<<<<<< HEAD
         <Tabs value={activeTab} onValueChange={setActiveTab}>
+=======
+        <Tabs defaultValue="overview">
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
           <TabsList className="glass border border-white/5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {screenshots.length > 0 && <TabsTrigger value="screenshots">Screenshots ({screenshots.length})</TabsTrigger>}
@@ -221,12 +287,15 @@ function ProductPage() {
                 {p.requirements && <><h3 className="mt-6 font-semibold">Requirements</h3><p className="mt-2 text-sm text-muted-foreground">{p.requirements}</p></>}
                 {p.known_issues && <><h3 className="mt-6 font-semibold">Known issues</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.known_issues}</p></>}
                 {p.roadmap && <><h3 className="mt-6 font-semibold">Roadmap</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.roadmap}</p></>}
+<<<<<<< HEAD
                 {p.extra_guidance && (
                   <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-4">
                     <h3 className="font-semibold text-primary">Guidance</h3>
                     <p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.extra_guidance}</p>
                   </div>
                 )}
+=======
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
 
                 {screenshots.length > 0 && (
                   <div className="mt-8">
@@ -237,6 +306,7 @@ function ProductPage() {
               </Card>
               <Card className="glass border-white/5 bg-transparent p-6">
                 <h3 className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">Details</h3>
+<<<<<<< HEAD
                 <dl className="mt-4 space-y-4 text-sm">
                   {p.latest_version && (
                     <div className="flex items-center gap-3">
@@ -339,6 +409,20 @@ function ProductPage() {
                   )}
                 </dl>
                 <div className="mt-6 flex flex-wrap gap-2">
+=======
+                <dl className="mt-4 space-y-3 text-sm">
+                  <Info k="Version" v={p.latest_version} />
+                  <Info k="Released" v={p.release_date} />
+                  <Info k="Developer" v={p.developer?.name} />
+                  <Info k="Publisher" v={p.publisher} />
+                  <Info k="License" v={p.license} />
+                  <Info k="Category" v={p.category?.name} />
+                  <Info k="Size" v={p.file_size} />
+                  <Info k="Platforms" v={(p.platforms ?? []).join(", ")} />
+                  <Info k="Architectures" v={(p.architectures ?? []).join(", ")} />
+                </dl>
+                <div className="mt-5 flex flex-wrap gap-2">
+>>>>>>> 1f5533fc487f47bffd59f39fa3a1e17e638d5f38
                   {p.source_url && <Button size="sm" variant="outline" asChild className="border-white/10 glass"><a href={p.source_url} target="_blank" rel="noreferrer"><Github className="mr-2 h-4 w-4" />Source</a></Button>}
                   {p.documentation_url && <Button size="sm" variant="outline" asChild className="border-white/10 glass"><a href={p.documentation_url} target="_blank" rel="noreferrer"><FileCode className="mr-2 h-4 w-4" />Docs</a></Button>}
                 </div>
