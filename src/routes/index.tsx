@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { comingSoonProductsQuery, newsQuery, productListQuery, statsQuery } from "@/lib/data";
+import { comingSoonProductsQuery, homeCountsQuery, newsQuery, productListQuery } from "@/lib/data";
 import { ProductCard } from "@/components/site/ProductCard";
 import { PreorderButton } from "@/components/site/PreorderButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Compass, Gamepad2, Heart, MessagesSquare, Sparkles } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
+import { BuyMeACoffeeButton, SupportModal } from "@/components/site/SupportModal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,8 +32,8 @@ function Home() {
   const comingSoon = useQuery(comingSoonProductsQuery());
   const latest = useQuery(productListQuery("all"));
   const news = useQuery(newsQuery());
-  const stats = useQuery(statsQuery());
-  const s = stats.data ?? {};
+  const counts = useQuery(homeCountsQuery());
+  const c = counts.data ?? { apps: 0, games: 0 };
 
   return (
     <div>
@@ -60,9 +61,7 @@ function Home() {
               <Button asChild size="lg" variant="outline" className="border-white/10 glass">
                 <Link to="/games"><Gamepad2 className="mr-2 h-4 w-4" />Explore Games</Link>
               </Button>
-              <Button asChild size="lg" variant="ghost">
-                <a href="#donate"><Heart className="mr-2 h-4 w-4" />Donate</a>
-              </Button>
+              <BuyMeACoffeeButton size="lg" />
             </div>
           </div>
 
@@ -78,8 +77,8 @@ function Home() {
       {/* STATS */}
       <section className="mx-auto -mt-8 max-w-7xl px-4">
         <div className="grid grid-cols-2 gap-3">
-          <StatCard label="Apps" value={s.apps_published ?? 0} />
-          <StatCard label="Games" value={s.games_published ?? 0} />
+          <StatCard label="Apps" value={c.apps} />
+          <StatCard label="Games" value={c.games} />
         </div>
       </section>
 
@@ -99,7 +98,7 @@ function Home() {
                   {p.banner_url && (
                     <img src={p.banner_url} alt="" className="absolute inset-0 h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.55 }} />
                   )}
-                  <div className="absolute right-2 top-2 rounded-md bg-black/60 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-white">Coming Soon</div>
+                  <div className="absolute right-2 top-2 rounded-md bg-primary/90 px-2 py-1 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground">Coming Soon</div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     {p.icon_url ? (
                       <img src={p.icon_url} alt={p.name} className="h-20 w-20 rounded-2xl border border-white/20 object-cover shadow-glow" />
@@ -136,21 +135,23 @@ function Home() {
       </section>
 
       {/* NEWS */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <h2 className="mb-6 text-3xl font-bold">Latest News</h2>
-        <div className="grid gap-4 md:grid-cols-3">
-          {(news.data ?? []).slice(0, 3).map((n: any) => (
-            <Card key={n.id} className="glass border-white/5 bg-transparent p-6">
-              <div className="text-xs uppercase tracking-widest text-primary">{new Date(n.created_at).toLocaleDateString()}</div>
-              <h3 className="mt-2 text-lg font-semibold">{n.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
-            </Card>
-          ))}
-        </div>
-      </section>
+      {(news.data ?? []).length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16">
+          <h2 className="mb-6 text-3xl font-bold">Latest News</h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            {(news.data ?? []).slice(0, 3).map((n: any) => (
+              <Card key={n.id} className="glass border-white/5 bg-transparent p-6">
+                <div className="text-xs uppercase tracking-widest text-primary">{new Date(n.created_at).toLocaleDateString()}</div>
+                <h3 className="mt-2 text-lg font-semibold">{n.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* SUPPORT */}
-      <section id="donate" className="mx-auto max-w-7xl px-4 py-16">
+      <section id="support" className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="glass border-white/5 bg-transparent p-8">
             <MessagesSquare className="h-8 w-8 text-primary" />
@@ -160,9 +161,19 @@ function Home() {
           </Card>
           <Card className="glass border-white/5 bg-transparent p-8">
             <Heart className="h-8 w-8 text-primary" />
-            <h3 className="mt-4 text-xl font-semibold">Support Us</h3>
-            <p className="mt-2 text-sm text-muted-foreground">Every contribution keeps RFL Studios shipping new apps and games.</p>
-            <Button asChild className="mt-4 bg-gradient-brand text-brand-foreground shadow-glow"><a href="#">Donate</a></Button>
+            <h3 className="mt-4 text-xl font-semibold">Support RFL Studios</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              If you enjoy our apps, buy us a coffee. Every contribution helps us build and improve free apps and open-source projects.
+            </p>
+            <div className="mt-4">
+              <SupportModal
+                trigger={
+                  <Button className="bg-gradient-brand text-brand-foreground shadow-glow">
+                    <Heart className="mr-2 h-4 w-4" /> Buy Me a Coffee
+                  </Button>
+                }
+              />
+            </div>
           </Card>
         </div>
       </section>

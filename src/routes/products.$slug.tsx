@@ -6,14 +6,13 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Download, Heart, ExternalLink, Github, FileCode, Calendar } from "lucide-react";
+import { Download, Heart, ExternalLink, Github, FileCode, Share2 } from "lucide-react";
 import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
 import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
 import { PreorderButton } from "@/components/site/PreorderButton";
-
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
@@ -40,6 +39,8 @@ export const Route = createFileRoute("/products/$slug")({
   ),
   errorComponent: ({ error }) => <div className="p-12 text-center text-destructive">{error.message}</div>,
 });
+
+const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "Tool" };
 
 function ProductPage() {
   const { slug } = Route.useParams();
@@ -71,64 +72,83 @@ function ProductPage() {
   const downloads: any[] = p.downloads ?? [];
   const versions: any[] = p.versions ?? [];
   const screenshots: any[] = p.screenshots ?? [];
+  const primaryDl = downloads.find((d) => d.is_primary) ?? downloads[0];
+  const share = async () => {
+    try { await navigator.share?.({ title: p.name, url: window.location.href }); }
+    catch { /* ignore */ }
+  };
 
   return (
     <div>
-      {/* HERO with banner background */}
+      {/* HERO — Microsoft Store style, banner-dominant */}
       <section className="relative overflow-hidden">
         {p.banner_url ? (
-          <>
-            <div className="absolute inset-0">
-              <img src={p.banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.4 }} />
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-background/20" />
-          </>
+          <div className="absolute inset-0">
+            <img src={p.banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.85 }} />
+            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+          </div>
         ) : (
           <>
-            <div className="absolute inset-0 bg-gradient-hero opacity-70" />
+            <div className="absolute inset-0 bg-gradient-hero opacity-80" />
             <div className="absolute inset-0 grid-bg opacity-30" />
           </>
         )}
-        <div className="relative mx-auto max-w-7xl px-4 py-14">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-6 sm:flex sm:justify-between">
-            <div className="flex min-w-0 items-start gap-5">
-              <div className="grid h-24 w-24 shrink-0 place-items-center overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-glow">
-                {p.icon_url ? (
-                  <img src={p.icon_url} alt={p.name} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="grid h-full w-full place-items-center bg-gradient-brand text-3xl font-bold text-brand-foreground">
-                    {p.name.slice(0, 2).toUpperCase()}
-                  </div>
-                )}
-              </div>
-              <div className="min-w-0">
-                <div className="text-xs uppercase tracking-widest text-primary">{p.kind}</div>
-                <h1 className="truncate text-3xl font-bold md:text-5xl">{p.name}</h1>
-                <p className="mt-1 text-lg text-muted-foreground">{p.tagline}</p>
-                {p.release_date && (
-                  <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1"><Calendar className="h-4 w-4" />{p.release_date}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="flex shrink-0 flex-col gap-2">
-              {p.coming_soon ? (
-                <PreorderButton productId={p.id} size="lg" />
+        <div className="relative mx-auto max-w-7xl px-4 pb-16 pt-24 md:pt-32">
+          <div className="grid max-w-3xl gap-6 md:grid-cols-[auto_minmax(0,1fr)]">
+            <div className="h-28 w-28 shrink-0 overflow-hidden rounded-3xl border border-white/15 bg-black/40 shadow-glow">
+              {p.icon_url ? (
+                <img src={p.icon_url} alt={p.name} className="h-full w-full object-cover" />
               ) : (
-                <Button size="lg" className="bg-gradient-brand text-brand-foreground shadow-glow"><Download className="mr-2 h-4 w-4" />Download v{p.latest_version}</Button>
+                <div className="grid h-full w-full place-items-center bg-gradient-brand text-3xl font-bold text-brand-foreground">
+                  {p.name.slice(0, 2).toUpperCase()}
+                </div>
               )}
-              <Button size="sm" variant="outline" className="border-white/10 glass" onClick={() => toggleFav.mutate()}>
-                <Heart className={`mr-2 h-4 w-4 ${favorited ? "fill-pink-400 stroke-pink-400" : ""}`} />
-                {favorited ? "Favorited" : "Add to favorites"}
-              </Button>
             </div>
+            <div className="min-w-0">
+              <h1 className="text-4xl font-bold md:text-5xl">{p.name}</h1>
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                <span className="font-medium uppercase tracking-wider text-primary">
+                  {p.developer?.name ?? p.publisher ?? "Radian Forge Labs"}
+                </span>
+                {p.category?.name && (
+                  <>
+                    <span className="text-muted-foreground">·</span>
+                    <span className="text-primary">{p.category.name}</span>
+                  </>
+                )}
+                <span className="text-muted-foreground">·</span>
+                <span className="text-muted-foreground">{KIND_LABEL[p.kind] ?? p.kind}</span>
+              </div>
+              {p.tagline && <p className="mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">{p.tagline}</p>}
 
-          </div>
-          <div className="mt-6 flex flex-wrap gap-1.5">
-            <StatusBadge value={p.status} />
-            <StatusBadge value={p.source_type} />
-            {(p.play_modes ?? []).map((m: string) => <StatusBadge key={m} value={m} />)}
+              <div className="mt-6 flex flex-wrap items-center gap-2">
+                {p.coming_soon ? (
+                  <PreorderButton productId={p.id} size="lg" className="min-w-40" />
+                ) : primaryDl ? (
+                  <Button asChild size="lg" className="min-w-40 bg-gradient-brand text-brand-foreground shadow-glow">
+                    <a href={primaryDl.url} target="_blank" rel="noreferrer">
+                      <Download className="mr-2 h-4 w-4" /> Get
+                    </a>
+                  </Button>
+                ) : (
+                  <Button size="lg" disabled className="min-w-40">No downloads yet</Button>
+                )}
+                <Button size="lg" variant="outline" className="border-white/10 glass" onClick={() => toggleFav.mutate()}>
+                  <Heart className={`mr-2 h-4 w-4 ${favorited ? "fill-pink-400 stroke-pink-400" : ""}`} />
+                  {favorited ? "Saved" : "Save"}
+                </Button>
+                <Button size="lg" variant="ghost" onClick={share}>
+                  <Share2 className="h-4 w-4" />
+                </Button>
+              </div>
+
+              <div className="mt-5 flex flex-wrap gap-1.5">
+                <StatusBadge value={p.status} />
+                <StatusBadge value={p.source_type} />
+                {p.coming_soon && <StatusBadge value="coming_soon" />}
+              </div>
+            </div>
           </div>
         </div>
       </section>

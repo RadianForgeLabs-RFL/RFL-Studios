@@ -1,77 +1,79 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useMutation } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/lib/useAuth";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { useState } from "react";
-import { z } from "zod";
-
-const schema = z.object({
-  kind: z.enum(["bug", "feature", "app_request", "game_request", "review_request"]),
-  title: z.string().trim().min(3).max(150),
-  body: z.string().trim().min(10).max(4000),
-});
+import { Mail, MessagesSquare, Heart, Coffee } from "lucide-react";
+import { SupportModal } from "@/components/site/SupportModal";
 
 export const Route = createFileRoute("/support")({
-  head: () => ({ meta: [{ title: "Support — RFL Studios" }, { name: "description", content: "Submit a bug report, feature request, or app/game request." }] }),
-  component: Support,
+  head: () => ({
+    meta: [
+      { title: "Support & Contact — RFL Studios" },
+      { name: "description", content: "Contact Radian Forge Labs, get support, or support us with a coffee." },
+    ],
+  }),
+  component: SupportPage,
 });
 
-function Support() {
-  const { user } = useAuth();
-  const nav = useNavigate();
-  const [kind, setKind] = useState<z.infer<typeof schema>["kind"]>("bug");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+const CONTACTS = [
+  { label: "Primary Contact", email: "radianforgelabs@gmail.com" },
+  { label: "Secondary Contact", email: "krishnaramalesh8838@gmail.com" },
+];
 
-  const mutation = useMutation({
-    mutationFn: async () => {
-      const parsed = schema.parse({ kind, title, body });
-      if (!user) throw new Error("Please sign in first.");
-      const { error } = await supabase.from("requests").insert({
-        kind: parsed.kind, title: parsed.title, body: parsed.body, user_id: user.id,
-      });
-      if (error) throw error;
-    },
-    onSuccess: () => { toast.success("Request submitted. Thank you!"); setTitle(""); setBody(""); },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
+function SupportPage() {
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12">
-      <h1 className="text-4xl font-bold md:text-5xl gradient-text">Support & Requests</h1>
-      <p className="mt-2 text-muted-foreground">Report a bug, request a feature, or ask us to review something.</p>
-      {!user ? (
-        <Card className="glass mt-6 border-white/5 bg-transparent p-6">
-          <p>You must be signed in to submit a request.</p>
-          <Button className="mt-4 bg-gradient-brand text-brand-foreground shadow-glow" onClick={() => nav({ to: "/auth" })}>Sign in</Button>
-        </Card>
-      ) : (
-        <Card className="glass mt-6 border-white/5 bg-transparent p-6">
-          <div className="space-y-4">
-            <div>
-              <Label>Type</Label>
-              <select value={kind} onChange={(e) => setKind(e.target.value as any)} className="mt-1 w-full rounded-md border border-white/10 bg-transparent px-3 py-2 text-sm">
-                <option value="bug">Bug report</option>
-                <option value="feature">Feature request</option>
-                <option value="app_request">App request</option>
-                <option value="game_request">Game request</option>
-                <option value="review_request">Review request</option>
-              </select>
+    <div className="mx-auto max-w-4xl px-4 py-14">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold md:text-5xl">
+          Get in <span className="gradient-text">touch</span>
+        </h1>
+        <p className="mt-3 text-muted-foreground">Questions, ideas, or feedback? We'd love to hear from you.</p>
+      </div>
+
+      <div className="mt-10 space-y-3">
+        {CONTACTS.map((c) => (
+          <Card key={c.email} className="glass flex items-center gap-4 border-white/5 bg-transparent p-5">
+            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-gradient-brand text-brand-foreground shadow-glow">
+              <Mail className="h-5 w-5" />
             </div>
-            <div><Label>Title</Label><Input value={title} onChange={(e) => setTitle(e.target.value)} maxLength={150} className="mt-1" /></div>
-            <div><Label>Details</Label><Textarea value={body} onChange={(e) => setBody(e.target.value)} maxLength={4000} rows={6} className="mt-1" /></div>
-            <Button onClick={() => mutation.mutate()} disabled={mutation.isPending} className="bg-gradient-brand text-brand-foreground shadow-glow">
-              {mutation.isPending ? "Submitting…" : "Submit request"}
+            <div className="min-w-0 flex-1">
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">{c.label}</div>
+              <a href={`mailto:${c.email}`} className="block truncate text-base font-semibold text-foreground hover:text-primary">
+                {c.email}
+              </a>
+            </div>
+          </Card>
+        ))}
+      </div>
+
+      <div className="mt-10 grid gap-4 md:grid-cols-2">
+        <Card className="glass border-white/5 bg-transparent p-6">
+          <MessagesSquare className="h-8 w-8 text-primary" />
+          <h2 className="mt-3 text-xl font-semibold">Feedback & bug reports</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Found a bug or have an idea? Email us at{" "}
+            <a href="mailto:radianforgelabs@gmail.com" className="text-primary hover:underline">radianforgelabs@gmail.com</a>.
+          </p>
+        </Card>
+        <Card className="glass border-white/5 bg-transparent p-6">
+          <Heart className="h-8 w-8 text-primary" />
+          <h2 className="mt-3 text-xl font-semibold">Support RFL Studios</h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            If you enjoy our apps and would like to support future development, you can buy us a coffee.
+          </p>
+          <div className="mt-4 flex gap-2">
+            <SupportModal
+              trigger={
+                <Button className="bg-gradient-brand text-brand-foreground shadow-glow">
+                  <Coffee className="mr-2 h-4 w-4" /> Buy Me a Coffee
+                </Button>
+              }
+            />
+            <Button asChild variant="outline" className="border-white/10 glass">
+              <Link to="/">Back to home</Link>
             </Button>
           </div>
         </Card>
-      )}
+      </div>
     </div>
   );
 }
