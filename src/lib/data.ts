@@ -38,8 +38,6 @@ export type Product = {
   coming_soon: boolean;
   published: boolean;
   download_count: number;
-  rating_avg: number;
-  rating_count: number;
   created_at: string;
   updated_at: string;
 };
@@ -95,26 +93,11 @@ export const productBySlugQuery = (slug: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("products")
-        .select("*, developer:developers(*), category:categories(*), screenshots(*), downloads(*), versions(*)")
+        .select("*, developer:developers(*), category:categories(*), screenshots(*), downloads(*), versions(*), tags:product_tags(tag:tags(*))")
         .eq("slug", slug)
         .maybeSingle();
       if (error) throw error;
       return data as any;
-    },
-  });
-
-export const reviewsQuery = (productId: string) =>
-  queryOptions({
-    queryKey: ["reviews", productId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("reviews")
-        .select("*, profile:profiles(display_name, avatar_url)")
-        .eq("product_id", productId)
-        .order("pinned", { ascending: false })
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return (data ?? []) as any[];
     },
   });
 

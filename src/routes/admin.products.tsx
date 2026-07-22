@@ -14,6 +14,10 @@ import { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { ImageUpload, MultiImageUpload } from "@/components/admin/MediaUpload";
 
+const PLAY_MODES = ["single_player", "multiplayer", "lan", "online", "offline", "cross_platform"];
+const PLATFORM_OPTIONS = ["Windows", "Linux", "Mac", "Android", "iOS", "Web"];
+const ARCHITECTURE_OPTIONS = ["x86_64", "arm64", "universal", "x86", "arm", "other"];
+
 export const Route = createFileRoute("/admin/products")({
   component: AdminProducts,
 });
@@ -85,6 +89,25 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
   const [banner_url, setBannerUrl] = useState<string | null>(product?.banner_url ?? null);
   const [banner_opacity, setBannerOpacity] = useState<number>(product?.banner_opacity ?? 0.4);
   const [productId, setProductId] = useState<string | null>(product?.id ?? null);
+  const [categoryId, setCategoryId] = useState(product?.category_id ?? "");
+  const [developerId, setDeveloperId] = useState(product?.developer_id ?? "");
+  const [license, setLicense] = useState(product?.license ?? "");
+  const [publisher, setPublisher] = useState(product?.publisher ?? "");
+  const [releaseDate, setReleaseDate] = useState(product?.release_date ?? "");
+  const [fileSize, setFileSize] = useState(product?.file_size ?? "");
+  const [features, setFeatures] = useState(product?.features?.join(", ") ?? "");
+  const [requirements, setRequirements] = useState(product?.requirements ?? "");
+  const [knownIssues, setKnownIssues] = useState(product?.known_issues ?? "");
+  const [roadmap, setRoadmap] = useState(product?.roadmap ?? "");
+  const [trailerUrl, setTrailerUrl] = useState(product?.trailer_url ?? "");
+  const [featured, setFeatured] = useState(product?.featured ?? false);
+  const [homepageOrder, setHomepageOrder] = useState(product?.homepage_order ?? 0);
+  const [playModes, setPlayModes] = useState(product?.play_modes?.join(", ") ?? "");
+  const [platforms, setPlatforms] = useState(product?.platforms?.join(", ") ?? "");
+  const [architectures, setArchitectures] = useState(product?.architectures?.join(", ") ?? "");
+  const [dependencies, setDependencies] = useState(product?.dependencies?.join(", ") ?? "");
+  const [documentationUrl, setDocumentationUrl] = useState(product?.documentation_url ?? "");
+  const [sourceUrl, setSourceUrl] = useState(product?.source_url ?? "");
   const qc = useQueryClient();
 
   useEffect(() => {
@@ -94,6 +117,25 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
     setBannerUrl(product?.banner_url ?? null);
     setBannerOpacity(product?.banner_opacity ?? 0.4);
     setExtraGuidance(product?.extra_guidance ?? "");
+    setCategoryId(product?.category_id ?? "");
+    setDeveloperId(product?.developer_id ?? "");
+    setLicense(product?.license ?? "");
+    setPublisher(product?.publisher ?? "");
+    setReleaseDate(product?.release_date ?? "");
+    setFileSize(product?.file_size ?? "");
+    setFeatures(product?.features?.join(", ") ?? "");
+    setRequirements(product?.requirements ?? "");
+    setKnownIssues(product?.known_issues ?? "");
+    setRoadmap(product?.roadmap ?? "");
+    setTrailerUrl(product?.trailer_url ?? "");
+    setFeatured(product?.featured ?? false);
+    setHomepageOrder(product?.homepage_order ?? 0);
+    setPlayModes(product?.play_modes?.join(", ") ?? "");
+    setPlatforms(product?.platforms?.join(", ") ?? "");
+    setArchitectures(product?.architectures?.join(", ") ?? "");
+    setDependencies(product?.dependencies?.join(", ") ?? "");
+    setDocumentationUrl(product?.documentation_url ?? "");
+    setSourceUrl(product?.source_url ?? "");
   }, [open, product]);
 
   const save = useMutation({
@@ -101,6 +143,25 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
       const payload: any = {
         name, slug: slug || slugify(name), tagline, description, extra_guidance, kind, status, source_type,
         latest_version, coming_soon, published, icon_url, banner_url, banner_opacity,
+        category_id: categoryId || null,
+        developer_id: developerId || null,
+        license: license || null,
+        publisher: publisher || null,
+        release_date: releaseDate || null,
+        file_size: fileSize || null,
+        features: features ? features.split(",").map((f: string) => f.trim()).filter(Boolean) : [],
+        requirements: requirements || null,
+        known_issues: knownIssues || null,
+        roadmap: roadmap || null,
+        trailer_url: trailerUrl || null,
+        featured,
+        homepage_order: homepageOrder,
+        play_modes: playModes ? playModes.split(",").map((p: string) => p.trim()).filter(Boolean) : [],
+        platforms: platforms ? platforms.split(",").map((p: string) => p.trim()).filter(Boolean) : [],
+        architectures: architectures ? architectures.split(",").map((a: string) => a.trim()).filter(Boolean) : [],
+        dependencies: dependencies ? dependencies.split(",").map((d: string) => d.trim()).filter(Boolean) : [],
+        documentation_url: documentationUrl || null,
+        source_url: sourceUrl || null,
       };
       if (productId) {
         const { error } = await supabase.from("products").update(payload).eq("id", productId);
@@ -156,6 +217,134 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
               <F label="Extra Guidance (shown on product page)" className="md:col-span-2">
                 <Textarea rows={3} value={extra_guidance} onChange={(e) => setExtraGuidance(e.target.value)} placeholder="Additional instructions or tips for users (e.g., installation steps, system requirements, usage tips)" />
               </F>
+              
+              {/* Organization */}
+              <F label="Category">
+                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} className="w-full rounded-md border border-white/10 bg-transparent px-3 py-2 text-sm">
+                  <option value="">Select category...</option>
+                  <option value="apps">Apps</option>
+                  <option value="games">Games</option>
+                  <option value="ai">AI Tools</option>
+                  <option value="developer-tools">Developer Tools</option>
+                  <option value="utilities">Utilities</option>
+                  <option value="media">Media</option>
+                  <option value="internet">Internet</option>
+                  <option value="security">Security</option>
+                  <option value="education">Education</option>
+                  <option value="system">System</option>
+                </select>
+              </F>
+              <F label="Developer">
+                <select value={developerId} onChange={(e) => setDeveloperId(e.target.value)} className="w-full rounded-md border border-white/10 bg-transparent px-3 py-2 text-sm">
+                  <option value="">Select developer...</option>
+                  <option value="rfl-studios">RFL Studios</option>
+                  <option value="radian-forge-labs">Radian Forge Labs</option>
+                  <option value="community">Community</option>
+                </select>
+              </F>
+              <F label="Publisher"><Input value={publisher} onChange={(e) => setPublisher(e.target.value)} placeholder="e.g. RFL Studios" /></F>
+              <F label="License"><Input value={license} onChange={(e) => setLicense(e.target.value)} placeholder="e.g. MIT, GPL-3.0, Proprietary" /></F>
+              
+              {/* Release Info */}
+              <F label="Release Date"><Input type="date" value={releaseDate} onChange={(e) => setReleaseDate(e.target.value)} /></F>
+              <F label="File Size"><Input value={fileSize} onChange={(e) => setFileSize(e.target.value)} placeholder="e.g. 120 MB" /></F>
+              
+              {/* URLs */}
+              <F label="Trailer URL" className="md:col-span-2"><Input value={trailerUrl} onChange={(e) => setTrailerUrl(e.target.value)} placeholder="YouTube or video URL" /></F>
+              <F label="Source URL"><Input value={sourceUrl} onChange={(e) => setSourceUrl(e.target.value)} placeholder="GitHub repository URL" /></F>
+              <F label="Documentation URL"><Input value={documentationUrl} onChange={(e) => setDocumentationUrl(e.target.value)} placeholder="Docs website URL" /></F>
+              
+              {/* Features & Requirements */}
+              <F label="Features (comma-separated)" className="md:col-span-2">
+                <Textarea rows={2} value={features} onChange={(e) => setFeatures(e.target.value)} placeholder="e.g. LAN Multiplayer, Cross-Platform, Custom Maps" />
+              </F>
+              <F label="Requirements" className="md:col-span-2">
+                <Textarea rows={2} value={requirements} onChange={(e) => setRequirements(e.target.value)} placeholder="System requirements..." />
+              </F>
+              <F label="Known Issues" className="md:col-span-2">
+                <Textarea rows={2} value={knownIssues} onChange={(e) => setKnownIssues(e.target.value)} placeholder="Known bugs or issues..." />
+              </F>
+              <F label="Roadmap" className="md:col-span-2">
+                <Textarea rows={2} value={roadmap} onChange={(e) => setRoadmap(e.target.value)} placeholder="Future plans..." />
+              </F>
+              <F label="Dependencies (comma-separated)" className="md:col-span-2">
+                <Textarea rows={2} value={dependencies} onChange={(e) => setDependencies(e.target.value)} placeholder="e.g. .NET 6, DirectX 11, Vulkan" />
+              </F>
+              
+              {/* Platform & Mode Selection */}
+              <F label="Platforms" className="md:col-span-2">
+                <div className="flex flex-wrap gap-2">
+                  {PLATFORM_OPTIONS.map((p) => (
+                    <label key={p} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={platforms.split(", ").includes(p)}
+                        onChange={(e) => {
+                          const current = platforms.split(", ").filter(Boolean);
+                          if (e.target.checked) {
+                            setPlatforms([...current, p].join(", "));
+                          } else {
+                            setPlatforms(current.filter((x: string) => x !== p).join(", "));
+                          }
+                        }}
+                      />
+                      {p}
+                    </label>
+                  ))}
+                </div>
+              </F>
+              <F label="Architectures" className="md:col-span-2">
+                <div className="flex flex-wrap gap-2">
+                  {ARCHITECTURE_OPTIONS.map((a) => (
+                    <label key={a} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={architectures.split(", ").includes(a)}
+                        onChange={(e) => {
+                          const current = architectures.split(", ").filter(Boolean);
+                          if (e.target.checked) {
+                            setArchitectures([...current, a].join(", "));
+                          } else {
+                            setArchitectures(current.filter((x: string) => x !== a).join(", "));
+                          }
+                        }}
+                      />
+                      {a}
+                    </label>
+                  ))}
+                </div>
+              </F>
+              <F label="Play Modes" className="md:col-span-2">
+                <div className="flex flex-wrap gap-2">
+                  {PLAY_MODES.map((pm) => (
+                    <label key={pm} className="flex items-center gap-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={playModes.split(", ").includes(pm)}
+                        onChange={(e) => {
+                          const current = playModes.split(", ").filter(Boolean);
+                          if (e.target.checked) {
+                            setPlayModes([...current, pm].join(", "));
+                          } else {
+                            setPlayModes(current.filter((x: string) => x !== pm).join(", "));
+                          }
+                        }}
+                      />
+                      {pm.replace("_", " ").replace(/\b\w/g, l => l.toUpperCase())}
+                    </label>
+                  ))}
+                </div>
+              </F>
+              
+              {/* Display Options */}
+              <F label="Homepage Order"><Input type="number" value={homepageOrder} onChange={(e) => setHomepageOrder(parseInt(e.target.value) || 0)} placeholder="0 = top" /></F>
+              <F label="">
+                <label className="flex items-center gap-2 text-sm">
+                  <input type="checkbox" checked={featured} onChange={(e) => setFeatured(e.target.checked)} />
+                  Featured (show on homepage)
+                </label>
+              </F>
+              
               <div className="md:col-span-2">
                 <Label className="mb-2 block">Release status</Label>
                 <div className="glass inline-flex items-center gap-1 rounded-full border border-white/10 p-1">

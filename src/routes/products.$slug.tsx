@@ -1,16 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { productBySlugQuery } from "@/lib/data";
 import { StatusBadge } from "@/components/site/StatusBadges";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Download, ExternalLink, Github, FileCode, Share2, Calendar, User, Building, Shield, Tag, HardDrive, Cpu } from "lucide-react";
+import { Download, ExternalLink, Github, FileCode, Share2, Calendar, User, Building, Shield, Tag, HardDrive, Cpu, Heart } from "lucide-react";
 import { toast } from "sonner";
 import { ScreenshotGallery } from "@/components/site/ScreenshotViewer";
 import { PreorderButton } from "@/components/site/PreorderButton";
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/products/$slug")({
   loader: async ({ context, params }) => {
@@ -44,6 +45,47 @@ function ProductPage() {
   const { slug } = Route.useParams();
   const { data: p } = useQuery(productBySlugQuery(slug));
   const [activeTab, setActiveTab] = useState("overview");
+  const qc = useQueryClient();
+
+  // Check if product is favorited
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => {
+      const { data } = await supabase.auth.getSession();
+      return data.session;
+    },
+  });
+
+  const { data: isFavorited } = useQuery({
+    queryKey: ["favorite", p?.id, session?.user?.id],
+    queryFn: async () => {
+      if (!p?.id || !session?.user?.id) return false;
+      const { data } = await supabase
+        .from("favorites")
+        .select("user_id")
+        .eq("product_id", p.id)
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      return !!data;
+    },
+    enabled: !!p?.id && !!session?.user?.id,
+  });
+
+  const toggleFavorite = useMutation({
+    mutationFn: async () => {
+      if (!p?.id || !session?.user?.id) throw new Error("Must be logged in");
+      if (isFavorited) {
+        await supabase.from("favorites").delete().eq("product_id", p.id).eq("user_id", session.user.id);
+      } else {
+        await supabase.from("favorites").insert({ product_id: p.id, user_id: session.user.id });
+      }
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["favorite", p?.id, session?.user?.id] });
+      toast.success(isFavorited ? "Removed from favorites" : "Added to favorites");
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
 
   if (!p) return <div className="p-12 text-center text-muted-foreground">Loading…</div>;
 
@@ -159,6 +201,20 @@ function ProductPage() {
               </div>
               {p.tagline && <p className="mt-4 max-w-2xl text-base text-foreground/80 md:text-lg">{p.tagline}</p>}
 
+              {p.trailer_url && (
+                <div className="mt-6">
+                  <div className="aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black/40">
+                    <iframe
+                      src={p.trailer_url.replace('watch?v=', 'embed/')}
+                      className="h-full w-full"
+                      allowFullScreen
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      title={`${p.name} trailer`}
+                    />
+                  </div>
+                </div>
+              )}
+
               <div className="mt-6 flex flex-wrap items-center gap-2">
                 {p.coming_soon ? (
                   <PreorderButton productId={p.id} size="lg" className="min-w-40" />
@@ -181,6 +237,16 @@ function ProductPage() {
                 ) : (
                   <Button size="lg" disabled className="min-w-40">No downloads yet</Button>
                 )}
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="border-white/10 glass"
+                  onClick={() => session ? toggleFavorite.mutate() : toast.error("Please log in to favorite")}
+                  disabled={toggleFavorite.isPending}
+                >
+                  <Heart className={`mr-2 h-4 w-4 ${isFavorited ? "fill-red-500 text-red-500" : ""}`} />
+                  {isFavorited ? "Favorited" : "Favorite"}
+                </Button>
                 <Button size="lg" variant="outline" className="border-white/10 glass" onClick={share}>
                   <Share2 className="mr-2 h-4 w-4" /> Share
                 </Button>
@@ -221,6 +287,24 @@ function ProductPage() {
                 {p.requirements && <><h3 className="mt-6 font-semibold">Requirements</h3><p className="mt-2 text-sm text-muted-foreground">{p.requirements}</p></>}
                 {p.known_issues && <><h3 className="mt-6 font-semibold">Known issues</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.known_issues}</p></>}
                 {p.roadmap && <><h3 className="mt-6 font-semibold">Roadmap</h3><p className="mt-2 text-sm text-muted-foreground whitespace-pre-line">{p.roadmap}</p></>}
+                {(p.play_modes ?? []).length > 0 && (
+                  <><h3 className="mt-6 font-semibold">Play Modes</h3>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {(p.play_modes ?? []).map((pm: string) => (
+                      <Badge key={pm} variant="outline" className="border-white/10">
+                        {pm.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </Badge>
+                    ))}
+                  </div></>
+                )}
+                {(p.dependencies ?? []).length > 0 && (
+                  <><h3 className="mt-6 font-semibold">Dependencies</h3>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {(p.dependencies ?? []).map((dep: string) => (
+                      <Badge key={dep} variant="outline" className="border-white/10">{dep}</Badge>
+                    ))}
+                  </div></>
+                )}
                 {p.extra_guidance && (
                   <div className="mt-6 rounded-lg border border-primary/20 bg-primary/5 p-4">
                     <h3 className="font-semibold text-primary">Guidance</h3>
@@ -334,6 +418,23 @@ function ProductPage() {
                       <div className="min-w-0 flex-1">
                         <div className="text-xs text-muted-foreground">Architectures</div>
                         <div className="font-medium">{(p.architectures ?? []).join(", ")}</div>
+                      </div>
+                    </div>
+                  )}
+                  {(p.tags ?? []).length > 0 && (
+                    <div className="flex items-start gap-3">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <Tag className="h-4 w-4" />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="text-xs text-muted-foreground">Tags</div>
+                        <div className="mt-1 flex flex-wrap gap-1">
+                          {(p.tags ?? []).map((t: any) => (
+                            <Badge key={t.tag?.id} variant="outline" className="border-white/10 text-xs">
+                              {t.tag?.name}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
                     </div>
                   )}
