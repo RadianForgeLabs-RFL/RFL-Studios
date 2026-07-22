@@ -454,7 +454,7 @@ function ProductPage() {
             </div>
 
             {p.trailer_url && (
-              <div className="hidden lg:block w-[500px] shrink-0">
+              <div className="w-full lg:w-[500px] lg:shrink-0">
                 <div className="glass rounded-2xl border border-white/10 bg-black/20 p-3 shadow-2xl backdrop-blur-xl">
                   <div className="aspect-video w-full overflow-hidden rounded-xl bg-black/50">
                     <iframe
