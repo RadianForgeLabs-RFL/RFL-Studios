@@ -328,7 +328,7 @@ function ProductPage() {
 
           <div className="absolute inset-0">
 
-            <img src={p.banner_url} alt="" className="h-full w-full object-cover" style={{ opacity: p.banner_opacity ?? 0.85 }} />
+            <img src={p.banner_url} alt="" className="h-full w-full object-cover object-center" style={{ opacity: p.banner_opacity ?? 0.85 }} />
 
             <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent" />
 
@@ -457,16 +457,26 @@ function ProductPage() {
               <div className="w-full lg:w-[500px] lg:shrink-0">
                 <div className="glass rounded-2xl border border-white/10 bg-black/20 p-3 shadow-2xl backdrop-blur-xl">
                   <div className="aspect-video w-full overflow-hidden rounded-xl bg-black/50">
-                    <video
-                      src={p.trailer_url}
-                      className="h-full w-full"
-                      controls
-                      autoPlay
-                      muted
-                      loop
-                      playsInline
-                      title={`${p.name} trailer`}
-                    />
+                    {p.trailer_url.includes('youtube.com') || p.trailer_url.includes('youtu.be') ? (
+                      <iframe
+                        src={p.trailer_url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/')}
+                        className="h-full w-full"
+                        allowFullScreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        title={`${p.name} trailer`}
+                      />
+                    ) : (
+                      <video
+                        src={p.trailer_url}
+                        className="h-full w-full"
+                        controls
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        title={`${p.name} trailer`}
+                      />
+                    )}
                   </div>
                 </div>
               </div>

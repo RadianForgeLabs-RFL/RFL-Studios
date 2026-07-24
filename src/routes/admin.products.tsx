@@ -401,7 +401,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
             <div>
               <Label className="mb-2 block">Banner transparency ({Math.round(banner_opacity * 100)}%)</Label>
               <input
-                type="range" min={0} max={1} step={0.01} value={banner_opacity}
+                type="range" min={0} max={1} step={0.005} value={banner_opacity}
                 onChange={async (e) => {
                   const v = parseFloat(e.target.value);
                   setBannerOpacity(v);
