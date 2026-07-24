@@ -457,11 +457,14 @@ function ProductPage() {
               <div className="w-full lg:w-[500px] lg:shrink-0">
                 <div className="glass rounded-2xl border border-white/10 bg-black/20 p-3 shadow-2xl backdrop-blur-xl">
                   <div className="aspect-video w-full overflow-hidden rounded-xl bg-black/50">
-                    <iframe
-                      src={p.trailer_url.replace('watch?v=', 'embed/')}
+                    <video
+                      src={p.trailer_url}
                       className="h-full w-full"
-                      allowFullScreen
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      controls
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
                       title={`${p.name} trailer`}
                     />
                   </div>
