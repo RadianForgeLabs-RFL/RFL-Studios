@@ -330,9 +330,9 @@ function ProductPage() {
 
             <img src={p.banner_url} alt="" className="h-full w-full object-cover object-center" style={{ opacity: p.banner_opacity ?? 0.85 }} />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-background via-background/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-background/30 via-background/20 to-transparent" />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-background/20 via-background/10 to-transparent" />
 
           </div>
 
