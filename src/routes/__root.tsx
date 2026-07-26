@@ -131,9 +131,19 @@ function MaintenanceWrapper({ children }: { children: ReactNode }) {
     queryFn: async () => (await supabase.from("settings").select("*")).data ?? [],
   });
 
-  const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
+  const { data: session } = useQuery({
+    queryKey: ["session"],
+    queryFn: async () => (await supabase.auth.getSession()).data.session,
+  });
 
-  if (maintenanceMode) {
+  const router = useRouter();
+  const currentPath = router.state.location.pathname;
+
+  const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
+  const isAdmin = session?.user?.email?.endsWith('@radianforlabs.com') || currentPath.startsWith('/admin');
+
+  // Allow admin access during maintenance
+  if (maintenanceMode && !isAdmin) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background px-4">
         <div className="max-w-md text-center">
