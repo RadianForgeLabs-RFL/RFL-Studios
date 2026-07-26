@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 
 export const Route = createFileRoute("/admin/settings")({
   component: AdminSettings,
@@ -33,6 +34,10 @@ function AdminSettings() {
     mutationFn: async ({ id, active }: any) => { const { error } = await supabase.from("announcements").update({ active }).eq("id", id); if (error) throw error; },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ["ann-all"] }); qc.invalidateQueries({ queryKey: ["announcement"] }); },
   });
+  const deleteAnn = useMutation({
+    mutationFn: async (id: string) => { const { error } = await supabase.from("announcements").delete().eq("id", id); if (error) throw error; },
+    onSuccess: () => { toast.success("Announcement deleted"); qc.invalidateQueries({ queryKey: ["ann-all"] }); qc.invalidateQueries({ queryKey: ["announcement"] }); },
+  });
   const toggleMaintenance = useMutation({
     mutationFn: async (v: boolean) => { const { error } = await supabase.from("settings").upsert({ key: "maintenance_mode", value: v as any }); if (error) throw error; },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings-all"] }); },
@@ -52,9 +57,19 @@ function AdminSettings() {
           {(ann.data ?? []).map((a: any) => (
             <div key={a.id} className="flex items-center justify-between rounded border border-white/5 p-3 text-sm">
               <span>{a.message}</span>
-              <label className="flex items-center gap-2 text-xs">
-                <input type="checkbox" checked={a.active} onChange={(e) => toggleAnn.mutate({ id: a.id, active: e.target.checked })} />Active
-              </label>
+              <div className="flex items-center gap-3">
+                <label className="flex items-center gap-2 text-xs">
+                  <input type="checkbox" checked={a.active} onChange={(e) => toggleAnn.mutate({ id: a.id, active: e.target.checked })} />Active
+                </label>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => deleteAnn.mutate(a.id)}
+                  className="h-7 w-7 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           ))}
         </div>

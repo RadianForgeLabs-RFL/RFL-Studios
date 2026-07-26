@@ -13,6 +13,7 @@ import { Footer } from "@/components/site/Footer";
 import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { ThemeProvider } from "@/components/site/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
+import { useQuery } from "@tanstack/react-query";
 
 function NotFoundComponent() {
   return (
@@ -86,6 +87,14 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  
+  const { data: settings } = useQuery({
+    queryKey: ["settings-all"],
+    queryFn: async () => (await supabase.from("settings").select("*")).data ?? [],
+  });
+
+  const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
+
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
@@ -94,6 +103,23 @@ function RootComponent() {
     });
     return () => sub.subscription.unsubscribe();
   }, [queryClient, router]);
+
+  if (maintenanceMode) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <div className="flex min-h-screen items-center justify-center bg-background px-4">
+            <div className="max-w-md text-center">
+              <h1 className="text-4xl font-bold gradient-text">Under Maintenance</h1>
+              <p className="mt-4 text-sm text-muted-foreground">We're currently performing maintenance. Please check back soon.</p>
+            </div>
+          </div>
+          <Toaster position="top-right" />
+        </ThemeProvider>
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
