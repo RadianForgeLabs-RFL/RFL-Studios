@@ -202,3 +202,38 @@
 
 @utility animate-blob { animation: blob 14s ease-in-out infinite; }
 @utility animate-fade-up { animation: fade-up 0.6s ease-out both; }
+
+/* Performance optimizations for mobile/low-end devices */
+.reduce-motion * {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+.reduce-effects .shadow-glow {
+  box-shadow: none !important;
+}
+
+.reduce-effects .gradient-text {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  color: var(--color-primary) !important;
+}
+
+.reduce-effects .bg-gradient-brand {
+  background: var(--color-brand) !important;
+}
+
+.reduce-effects .glass {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--color-card) !important;
+}
+
+/* Reduce image loading on mobile */
+@media (max-width: 768px) {
+  img {
+    content-visibility: auto;
+  }
+}

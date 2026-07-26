@@ -1,13 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 import { comingSoonProductsQuery, homeCountsQuery, newsQuery, productListQuery } from "@/lib/data";
-import { ProductCard } from "@/components/site/ProductCard";
-import { PreorderButton } from "@/components/site/PreorderButton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Compass, Gamepad2, Heart, MessagesSquare, Sparkles } from "lucide-react";
 import { Logo } from "@/components/site/Logo";
-import { BuyMeACoffeeButton, SupportModal } from "@/components/site/SupportModal";
+
+// Lazy load heavy components
+const ProductCard = lazy(() => import("@/components/site/ProductCard").then(m => ({ default: m.ProductCard })));
+const PreorderButton = lazy(() => import("@/components/site/PreorderButton").then(m => ({ default: m.PreorderButton })));
+const SupportModal = lazy(() => import("@/components/site/SupportModal").then(m => ({ default: m.SupportModal })));
+const BuyMeACoffeeButton = lazy(() => import("@/components/site/SupportModal").then(m => ({ default: m.BuyMeACoffeeButton })));
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -61,7 +65,9 @@ function Home() {
               <Button asChild size="lg" variant="outline" className="border-white/10 glass">
                 <Link to="/games"><Gamepad2 className="mr-2 h-4 w-4" />Explore Games</Link>
               </Button>
-              <BuyMeACoffeeButton size="lg" />
+              <Suspense fallback={<Button disabled size="lg">Loading...</Button>}>
+                <BuyMeACoffeeButton size="lg" />
+              </Suspense>
             </div>
           </div>
 
@@ -112,7 +118,9 @@ function Home() {
                     <div className="text-lg font-semibold group-hover:text-primary">{p.name}</div>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
                     <div className="mt-4" onClick={(e) => e.stopPropagation()}>
-                      <PreorderButton productId={p.id} slug={p.slug} />
+                      <Suspense fallback={<Button disabled className="w-full">Loading...</Button>}>
+                        <PreorderButton productId={p.id} slug={p.slug} />
+                      </Suspense>
                     </div>
                   </div>
                 </Card>
@@ -132,7 +140,14 @@ function Home() {
           <Button asChild variant="ghost" size="sm"><Link to="/projects">All projects <ArrowRight className="ml-1 h-4 w-4" /></Link></Button>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {(latest.data ?? []).slice(0, 8).map((p) => <ProductCard key={p.id} p={p} />)}
+          <Suspense fallback={Array(4).fill(0).map((_, i) => (
+            <Card key={i} className="glass border-white/5 bg-transparent p-4">
+              <div className="h-32 animate-pulse bg-white/5 rounded" />
+              <div className="mt-3 h-4 w-3/4 animate-pulse bg-white/5 rounded" />
+            </Card>
+          ))}>
+            {(latest.data ?? []).slice(0, 8).map((p) => <ProductCard key={p.id} p={p} />)}
+          </Suspense>
         </div>
       </section>
 

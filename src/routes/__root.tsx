@@ -14,6 +14,7 @@ import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { ThemeProvider } from "@/components/site/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
+import { useMobile } from "@/hooks/use-mobile";
 
 function NotFoundComponent() {
   return (
@@ -87,6 +88,18 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
+  const { isMobile, isLowEnd } = useMobile();
+
+  useEffect(() => {
+    // Apply performance optimizations for mobile/low-end devices
+    if (isMobile || isLowEnd) {
+      document.documentElement.classList.add('reduce-motion');
+      document.documentElement.classList.add('reduce-effects');
+    } else {
+      document.documentElement.classList.remove('reduce-motion');
+      document.documentElement.classList.remove('reduce-effects');
+    }
+  }, [isMobile, isLowEnd]);
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
