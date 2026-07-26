@@ -87,13 +87,6 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
-  
-  const { data: settings } = useQuery({
-    queryKey: ["settings-all"],
-    queryFn: async () => (await supabase.from("settings").select("*")).data ?? [],
-  });
-
-  const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
@@ -104,31 +97,39 @@ function RootComponent() {
     return () => sub.subscription.unsubscribe();
   }, [queryClient, router]);
 
-  if (maintenanceMode) {
-    return (
-      <QueryClientProvider client={queryClient}>
+  return (
+    <QueryClientProvider client={queryClient}>
+      <MaintenanceWrapper>
         <ThemeProvider>
-          <div className="flex min-h-screen items-center justify-center bg-background px-4">
-            <div className="max-w-md text-center">
-              <h1 className="text-4xl font-bold gradient-text">Under Maintenance</h1>
-              <p className="mt-4 text-sm text-muted-foreground">We're currently performing maintenance. Please check back soon.</p>
-            </div>
-          </div>
+          <AnnouncementBar />
+          <Header />
+          <main className="min-h-[70vh]"><Outlet /></main>
+          <Footer />
           <Toaster position="top-right" />
         </ThemeProvider>
-      </QueryClientProvider>
+      </MaintenanceWrapper>
+    </QueryClientProvider>
+  );
+}
+
+function MaintenanceWrapper({ children }: { children: ReactNode }) {
+  const { data: settings } = useQuery({
+    queryKey: ["settings-all"],
+    queryFn: async () => (await supabase.from("settings").select("*")).data ?? [],
+  });
+
+  const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
+
+  if (maintenanceMode) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background px-4">
+        <div className="max-w-md text-center">
+          <h1 className="text-4xl font-bold gradient-text">Under Maintenance</h1>
+          <p className="mt-4 text-sm text-muted-foreground">We're currently performing maintenance. Please check back soon.</p>
+        </div>
+      </div>
     );
   }
 
-  return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AnnouncementBar />
-        <Header />
-        <main className="min-h-[70vh]"><Outlet /></main>
-        <Footer />
-        <Toaster position="top-right" />
-      </ThemeProvider>
-    </QueryClientProvider>
-  );
+  return <>{children}</>;
 }
