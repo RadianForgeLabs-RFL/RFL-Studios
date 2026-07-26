@@ -140,7 +140,7 @@ function MaintenanceWrapper({ children }: { children: ReactNode }) {
   const currentPath = router.state.location.pathname;
 
   const maintenanceMode = settings?.find((s: any) => s.key === "maintenance_mode")?.value === true;
-  const isAdmin = session?.user?.email?.endsWith('@radianforlabs.com') || currentPath.startsWith('/admin');
+  const isAdmin = session?.user?.email?.endsWith('@radianforlabs.com') || session?.user?.email === 'krishnaramalesh8838@gmail.com' || currentPath.startsWith('/admin');
 
   // Allow admin access during maintenance
   if (maintenanceMode && !isAdmin) {
