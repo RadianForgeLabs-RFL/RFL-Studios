@@ -58,6 +58,8 @@ export const productListQuery = (kind?: ProductKind | "all") =>
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
 export const adminProductListQuery = () =>
@@ -71,6 +73,8 @@ export const adminProductListQuery = () =>
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    gcTime: 5 * 60 * 1000, // 5 minutes
   });
 
 export const comingSoonProductsQuery = () =>
@@ -85,6 +89,8 @@ export const comingSoonProductsQuery = () =>
       if (error) throw error;
       return (data ?? []) as unknown as Product[];
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
 export const productBySlugQuery = (slug: string) =>
@@ -99,6 +105,8 @@ export const productBySlugQuery = (slug: string) =>
       if (error) throw error;
       return data as any;
     },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
   });
 
 export const categoriesQuery = () =>
@@ -109,6 +117,8 @@ export const categoriesQuery = () =>
       if (error) throw error;
       return data ?? [];
     },
+    staleTime: 30 * 60 * 1000, // 30 minutes
+    gcTime: 60 * 60 * 1000, // 1 hour
   });
 
 export const newsQuery = () =>
@@ -119,6 +129,8 @@ export const newsQuery = () =>
       if (error) throw error;
       return data ?? [];
     },
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
   });
 
 export const announcementQuery = () =>
@@ -129,6 +141,8 @@ export const announcementQuery = () =>
       if (error) throw error;
       return data;
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
 // Live counts from products (excludes coming-soon from the "released" tally)
@@ -148,4 +162,6 @@ export const homeCountsQuery = () =>
         games: rows.filter((r: any) => r.kind === "game").length,
       };
     },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
