@@ -26,10 +26,14 @@ export default defineConfig({
             if (id.includes('@radix-ui')) {
               return 'ui';
             }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
           },
         },
       },
       chunkSizeWarningLimit: 1000,
+      minify: 'terser',
     },
     optimizeDeps: {
       include: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
