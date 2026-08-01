@@ -36,11 +36,11 @@ function AdminSettings() {
     const si = set.data?.find((s: any) => s.key === "studios_icon");
     const ei = set.data?.find((s: any) => s.key === "entertainment_icon");
     
-    if (uc) setUserCount(uc.value);
-    if (pc) setPlayerCount(pc.value);
-    if (dc) setDownloadsCount(dc.value);
-    if (si) setStudiosIcon(si.value);
-    if (ei) setEntertainmentIcon(ei.value);
+    if (uc) setUserCount(String(uc.value ?? ''));
+    if (pc) setPlayerCount(String(pc.value ?? ''));
+    if (dc) setDownloadsCount(String(dc.value ?? ''));
+    if (si) setStudiosIcon(String(si.value ?? ''));
+    if (ei) setEntertainmentIcon(String(ei.value ?? ''));
   }, [set.data]);
 
   const addAnn = useMutation({

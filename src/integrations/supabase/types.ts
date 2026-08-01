@@ -292,6 +292,7 @@ export type Database = {
           developer_id: string | null
           documentation_url: string | null
           download_count: number
+          extra_guidance: string | null
           featured: boolean
           features: string[] | null
           file_size: string | null
@@ -333,6 +334,7 @@ export type Database = {
           developer_id?: string | null
           documentation_url?: string | null
           download_count?: number
+          extra_guidance?: string | null
           featured?: boolean
           features?: string[] | null
           file_size?: string | null
@@ -374,6 +376,7 @@ export type Database = {
           developer_id?: string | null
           documentation_url?: string | null
           download_count?: number
+          extra_guidance?: string | null
           featured?: boolean
           features?: string[] | null
           file_size?: string | null
@@ -574,18 +577,33 @@ export type Database = {
       }
       settings: {
         Row: {
+          downloads_count: string | null
+          entertainment_icon: string | null
           key: string
+          player_count: string | null
+          studios_icon: string | null
           updated_at: string
+          user_count: string | null
           value: Json
         }
         Insert: {
+          downloads_count?: string | null
+          entertainment_icon?: string | null
           key: string
+          player_count?: string | null
+          studios_icon?: string | null
           updated_at?: string
+          user_count?: string | null
           value: Json
         }
         Update: {
+          downloads_count?: string | null
+          entertainment_icon?: string | null
           key?: string
+          player_count?: string | null
+          studios_icon?: string | null
           updated_at?: string
+          user_count?: string | null
           value?: Json
         }
         Relationships: []

@@ -90,7 +90,7 @@ export function Header() {
             </DropdownMenu>
           ) : (
             <Button asChild size="sm" className="bg-gradient-brand text-brand-foreground shadow-glow hover:opacity-90">
-              <Link to="/auth">Login</Link>
+              <Link to="/auth" search={{ redirect: undefined }}>Login</Link>
             </Button>
           )}
 
