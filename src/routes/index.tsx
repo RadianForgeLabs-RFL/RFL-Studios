@@ -89,7 +89,7 @@ function Home() {
               <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-sky-500 text-white hover:opacity-90">
                 <Link to="/studios">RFL Studios</Link>
               </Button>
-              <Button asChild size="lg" className="bg-gradient-to-r from-red-600 to-rose-500 text-white hover:opacity-90">
+              <Button asChild size="lg" className="bg-gradient-to-r from-purple-500 to-pink-400 text-white hover:opacity-90">
                 <Link to="/entertainment">RFL Entertainment</Link>
               </Button>
 
