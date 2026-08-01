@@ -94,6 +94,26 @@ function ProductPage() {
 
   const qc = useQueryClient();
 
+  // Determine color scheme based on product kind
+  const getColorScheme = () => {
+    if (p?.kind === 'game') return {
+      gradient: 'from-rose-500 to-rose-400',
+      text: 'text-rose-500',
+      border: 'border-rose-500/20',
+      bg: 'bg-rose-500/5',
+      hover: 'hover:bg-rose-500/10'
+    };
+    return {
+      gradient: 'from-blue-500 to-blue-400',
+      text: 'text-blue-500',
+      border: 'border-blue-500/20',
+      bg: 'bg-blue-500/5',
+      hover: 'hover:bg-blue-500/10'
+    };
+  };
+
+  const colors = getColorScheme();
+
 
 
   // Check if product is favorited
@@ -361,7 +381,7 @@ function ProductPage() {
 
                   ) : (
 
-                    <div className="grid h-full w-full place-items-center bg-gradient-brand text-3xl font-bold text-brand-foreground">
+                    <div className={`grid h-full w-full place-items-center bg-gradient-to-r ${colors.gradient} text-3xl font-bold text-white`}>
 
                       {p.name.slice(0, 2).toUpperCase()}
 
@@ -377,7 +397,7 @@ function ProductPage() {
 
                   <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
 
-                    <span className="font-medium uppercase tracking-wider text-primary">
+                    <span className={`font-medium uppercase tracking-wider ${colors.text}`}>
 
                       {p.developer?.name ?? p.publisher ?? "Radian Forge Labs"}
 
@@ -389,7 +409,7 @@ function ProductPage() {
 
                         <span className="text-muted-foreground">·</span>
 
-                        <span className="text-primary">{p.category.name}</span>
+                        <span className={colors.text}>{p.category.name}</span>
 
                       </>
 
@@ -409,18 +429,18 @@ function ProductPage() {
 
               <div className="mt-6 flex flex-wrap items-center gap-2">
                 {p.coming_soon ? (
-                  <PreorderButton productId={p.id} size="lg" className="min-w-40" />
+                  <PreorderButton productId={p.id} size="lg" className="min-w-40" kind={p.kind} />
                 ) : primaryDl ? (
                   !platformDl ? (
                     <Button
                       size="lg"
-                      className="min-w-40 bg-gradient-brand text-brand-foreground shadow-glow"
+                      className={`min-w-40 bg-gradient-to-r ${colors.gradient} text-white shadow-glow`}
                       onClick={handleGetClick}
                     >
                       <Download className="mr-2 h-4 w-4" /> Get
                     </Button>
                   ) : (
-                    <Button asChild size="lg" className="min-w-40 bg-gradient-brand text-brand-foreground shadow-glow">
+                    <Button asChild size="lg" className={`min-w-40 bg-gradient-to-r ${colors.gradient} text-white shadow-glow`}>
                       <a href={primaryDl.url} target="_blank" rel="noreferrer">
                         <Download className="mr-2 h-4 w-4" /> Get for {primaryDl.platform}{primaryDl.version && ` v${primaryDl.version}`}
                       </a>
@@ -612,7 +632,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Tag className="h-4 w-4" />
 
@@ -634,7 +654,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Calendar className="h-4 w-4" />
 
@@ -656,7 +676,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <User className="h-4 w-4" />
 
@@ -678,7 +698,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Building className="h-4 w-4" />
 
@@ -700,7 +720,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Shield className="h-4 w-4" />
 
@@ -722,7 +742,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Tag className="h-4 w-4" />
 
@@ -744,7 +764,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <HardDrive className="h-4 w-4" />
 
@@ -766,7 +786,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Cpu className="h-4 w-4" />
 
@@ -788,7 +808,7 @@ function ProductPage() {
 
                     <div className="flex items-center gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Cpu className="h-4 w-4" />
 
@@ -810,7 +830,7 @@ function ProductPage() {
 
                     <div className="flex items-start gap-3">
 
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${colors.bg} ${colors.text}`}>
 
                         <Tag className="h-4 w-4" />
 
@@ -896,7 +916,7 @@ function ProductPage() {
 
                         {d.mirror_name && <Badge variant="outline" className="border-white/10">{d.mirror_name}</Badge>}
 
-                        {d.is_primary && <Badge className="bg-gradient-brand text-brand-foreground">Primary</Badge>}
+                        {d.is_primary && <Badge className={`bg-gradient-to-r ${colors.gradient} text-white`}>Primary</Badge>}
 
                         {d.version && <Badge variant="outline" className="border-white/10">v{d.version}</Badge>}
 
@@ -904,7 +924,7 @@ function ProductPage() {
 
                     </div>
 
-                    <Button asChild className="bg-gradient-brand text-brand-foreground shadow-glow">
+                    <Button asChild className={`bg-gradient-to-r ${colors.gradient} text-white shadow-glow`}>
 
                       <a href={d.url} target="_blank" rel="noreferrer"><ExternalLink className="mr-2 h-4 w-4" />Download</a>
 
