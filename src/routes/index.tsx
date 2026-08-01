@@ -36,7 +36,7 @@ function DivisionCard({
 }) {
   return (
     <Link to={to} className="group">
-      <Card className="relative overflow-hidden border-white/10 bg-gradient-to-br from-white/5 to-transparent transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+      <Card className={`relative overflow-hidden border-white/10 bg-gradient-to-br from-white/5 to-transparent transition-all hover:border-${color}-500/40 hover:shadow-xl hover:shadow-${color}-500/20`}>
         <div className={`absolute inset-0 bg-gradient-to-br from-${color}-500/10 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100`} />
         <div className="relative p-8 md:p-12">
           <div className={`mb-6 inline-flex rounded-2xl border border-${color}-500/30 bg-${color}-500/10 p-4`}>

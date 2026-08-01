@@ -120,7 +120,7 @@ main {
                    radial-gradient(60% 50% at 80% 30%, oklch(0.66 0.20 250 / 0.30), transparent 60%),
                    radial-gradient(80% 60% at 60% 90%, oklch(0.60 0.18 210 / 0.25), transparent 60%);
   --gradient-card: linear-gradient(180deg, oklch(1 0 0 / 0.04), oklch(1 0 0 / 0.01));
-  --shadow-glow: 0 20px 60px -20px oklch(0.74 0.19 235 / 0.55);
+  --shadow-glow: 0 20px 60px -20px oklch(0 0 0 / 0.3);
   --shadow-card: 0 8px 30px -12px oklch(0 0 0 / 0.6);
 }
 
@@ -274,7 +274,7 @@ main {
 }
 
 .shadow-glow {
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.15) !important;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15) !important;
 }
 
 /* Reduce image loading on mobile */
@@ -296,11 +296,11 @@ main {
 /* Dynamic page themes based on route */
 .theme-home body {
   background-image:
-    radial-gradient(1200px 600px at 10% -10%, oklch(0.74 0.19 235 / 0.10), transparent 60%),
-    radial-gradient(900px 500px at 100% 10%, oklch(0.66 0.20 250 / 0.08), transparent 60%);
-  --primary: oklch(0.65 0.20 250);
-  --brand: oklch(0.65 0.20 250);
-  --gradient-brand: linear-gradient(90deg, oklch(0.65 0.20 220), oklch(0.65 0.20 250), oklch(0.65 0.20 330));
+    radial-gradient(1200px 600px at 10% -10%, oklch(0.65 0.20 280 / 0.10), transparent 60%),
+    radial-gradient(900px 500px at 100% 10%, oklch(0.70 0.18 300 / 0.08), transparent 60%);
+  --primary: oklch(0.65 0.20 280);
+  --brand: oklch(0.65 0.20 280);
+  --gradient-brand: linear-gradient(90deg, oklch(0.65 0.20 260), oklch(0.65 0.20 280), oklch(0.65 0.20 300));
 }
 
 .theme-studios body {
@@ -314,11 +314,11 @@ main {
 
 .theme-entertainment body {
   background-image:
-    radial-gradient(1200px 600px at 10% -10%, oklch(0.65 0.20 300 / 0.12), transparent 60%),
-    radial-gradient(900px 500px at 100% 10%, oklch(0.70 0.18 330 / 0.10), transparent 60%);
-  --primary: oklch(0.65 0.20 300);
-  --brand: oklch(0.65 0.20 300);
-  --gradient-brand: linear-gradient(135deg, oklch(0.70 0.18 300), oklch(0.65 0.20 330));
+    radial-gradient(1200px 600px at 10% -10%, oklch(0.65 0.20 330 / 0.12), transparent 60%),
+    radial-gradient(900px 500px at 100% 10%, oklch(0.70 0.18 350 / 0.10), transparent 60%);
+  --primary: oklch(0.65 0.20 330);
+  --brand: oklch(0.65 0.20 330);
+  --gradient-brand: linear-gradient(135deg, oklch(0.70 0.18 330), oklch(0.65 0.20 350));
 }
 
 /* Common pages gradient theme (About, Support, Privacy, Terms) */
