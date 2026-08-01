@@ -49,7 +49,7 @@ function Entertainment() {
                 <Link to="/games">Browse Games</Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
-                <Link to="/coming-soon">Coming Soon</Link>
+                <Link to="/games">Coming Soon</Link>
               </Button>
             </div>
           </div>
