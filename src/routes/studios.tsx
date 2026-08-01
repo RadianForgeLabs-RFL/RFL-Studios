@@ -30,6 +30,7 @@ function FeatureCard({ icon: Icon, title, description }: { icon: any, title: str
 
 function Studios() {
   const apps = useQuery(productListQuery("app"));
+  const comingSoon = useQuery(productListQuery("app"));
   const counts = useQuery(homeCountsQuery());
 
   return (
@@ -47,6 +48,9 @@ function Studios() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:opacity-90">
                 <Link to="/apps">Browse Apps</Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
+                <Link to="/apps">Coming Soon</Link>
               </Button>
             </div>
           </div>
@@ -117,6 +121,29 @@ function Studios() {
             </Card>
           ))}>
             {(apps.data ?? []).slice(0, 6).map((p) => <ProductCard key={p.id} p={p} />)}
+          </Suspense>
+        </div>
+      </section>
+
+      {/* COMING SOON */}
+      <section className="mx-auto max-w-7xl px-4 py-16">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">Coming Soon</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Applications and tools in development.</p>
+          </div>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/apps">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
+          </Button>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Suspense fallback={Array(3).fill(0).map((_, i) => (
+            <Card key={i} className="border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6">
+              <div className="h-40 bg-blue-500/10 rounded animate-pulse" />
+              <div className="mt-4 h-4 w-3/4 bg-blue-500/10 rounded" />
+            </Card>
+          ))}>
+            {(comingSoon.data ?? []).filter((p: any) => p.coming_soon).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
           </Suspense>
         </div>
       </section>

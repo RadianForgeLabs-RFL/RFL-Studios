@@ -30,6 +30,7 @@ function FeatureCard({ icon: Icon, title, description }: { icon: any, title: str
 
 function Entertainment() {
   const games = useQuery(productListQuery("game"));
+  const comingSoon = useQuery(productListQuery("game"));
   const counts = useQuery(homeCountsQuery());
 
   return (
@@ -130,6 +131,29 @@ function Entertainment() {
             </Card>
           ))}>
             {(games.data ?? []).slice(0, 6).map((p) => <ProductCard key={p.id} p={p} />)}
+          </Suspense>
+        </div>
+      </section>
+
+      {/* COMING SOON */}
+      <section className="mx-auto max-w-7xl px-4 py-16">
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">Coming Soon</h2>
+            <p className="mt-2 text-sm text-muted-foreground">Games in development.</p>
+          </div>
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/games">View All <ArrowRight className="ml-1 h-4 w-4" /></Link>
+          </Button>
+        </div>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Suspense fallback={Array(3).fill(0).map((_, i) => (
+            <Card key={i} className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6">
+              <div className="h-40 bg-purple-500/10 rounded animate-pulse" />
+              <div className="mt-4 h-4 w-3/4 bg-purple-500/10 rounded" />
+            </Card>
+          ))}>
+            {(comingSoon.data ?? []).filter((p: any) => p.coming_soon).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
           </Suspense>
         </div>
       </section>
