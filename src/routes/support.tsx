@@ -7,7 +7,7 @@ import { SupportModal } from "@/components/site/SupportModal";
 export const Route = createFileRoute("/support")({
   head: () => ({
     meta: [
-      { title: "Support & Contact — RFL Studios" },
+      { title: "Support & Contact — Radian Forge Labs" },
       { name: "description", content: "Contact Radian Forge Labs, get support, or support us with a coffee." },
     ],
   }),
@@ -56,12 +56,13 @@ function SupportPage() {
         </Card>
         <Card className="glass border-white/5 bg-transparent p-6">
           <Heart className="h-8 w-8 text-primary" />
-          <h2 className="mt-3 text-xl font-semibold">Support RFL Studios</h2>
+          <h2 className="mt-3 text-xl font-semibold">Support Radian Forge Labs</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            If you enjoy our apps and would like to support future development, you can buy us a coffee.
+            If you enjoy our apps and games and would like to support future development, you can buy us a coffee.
           </p>
           <div className="mt-4 flex gap-2">
             <SupportModal
+              title="Support RadianForgeLabs"
               trigger={
                 <Button className="bg-gradient-brand text-brand-foreground shadow-glow">
                   <Coffee className="mr-2 h-4 w-4" /> Buy Me a Coffee
