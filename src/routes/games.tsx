@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useState } from "react";
 import { allProductsQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { ArrowRight, Search } from "lucide-react";
 
 const ProductCard = lazy(() => import("@/components/site/ProductCard").then(m => ({ default: m.ProductCard })));
 
@@ -20,6 +21,12 @@ export const Route = createFileRoute("/games")({
 
 function Games() {
   const games = useQuery(allProductsQuery("game"));
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredGames = (games.data ?? []).filter((p) =>
+    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    p.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div>
@@ -39,6 +46,20 @@ function Games() {
 
       {/* GAMES GRID */}
       <section className="mx-auto max-w-7xl px-4 py-16">
+        {/* Search Bar */}
+        <div className="mb-8 max-w-md">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search games..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 border-purple-500/30 bg-purple-500/5 focus:border-purple-500/50"
+            />
+          </div>
+        </div>
+
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Suspense fallback={Array(6).fill(0).map((_, i) => (
             <Card key={i} className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6">
@@ -46,9 +67,14 @@ function Games() {
               <div className="mt-4 h-4 w-3/4 bg-purple-500/10 rounded" />
             </Card>
           ))}>
-            {(games.data ?? []).map((p) => <ProductCard key={p.id} p={p} />)}
+            {filteredGames.map((p) => <ProductCard key={p.id} p={p} />)}
           </Suspense>
         </div>
+        {filteredGames.length === 0 && games.data && games.data.length > 0 && (
+          <div className="text-center py-16">
+            <p className="text-muted-foreground">No games found matching "{searchQuery}".</p>
+          </div>
+        )}
         {games.data?.length === 0 && (
           <div className="text-center py-16">
             <p className="text-muted-foreground">No games available yet.</p>
