@@ -86,12 +86,13 @@ function Home() {
               Building the future through professional software and immersive gaming experiences.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90">
+              <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-sky-500 text-white hover:opacity-90">
                 <Link to="/studios">RFL Studios</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
+              <Button asChild size="lg" className="bg-gradient-to-r from-red-600 to-rose-500 text-white hover:opacity-90">
                 <Link to="/entertainment">RFL Entertainment</Link>
               </Button>
+
             </div>
           </div>
         </div>
