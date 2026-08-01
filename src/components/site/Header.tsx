@@ -4,7 +4,7 @@ import { useAuth, useIsAdmin } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { LogOut, ShieldCheck, User as UserIcon, Menu, Coffee } from "lucide-react";
+import { LogOut, ShieldCheck, User as UserIcon, Menu, Coffee, Github } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "./ThemeToggle";
@@ -13,12 +13,10 @@ import { SupportModal } from "./SupportModal";
 
 const NAV = [
   { to: "/", label: "Home" },
-  { to: "/apps", label: "Apps" },
-  { to: "/games", label: "Games" },
-  { to: "/projects", label: "Projects" },
-  { to: "/downloads", label: "Downloads" },
+  { to: "/studios", label: "Studios" },
+  { to: "/entertainment", label: "Entertainment" },
   { to: "/about", label: "About" },
-  { to: "/support", label: "Support" },
+  { to: "/support", label: "Contact" },
 ] as const;
 
 export function Header() {
@@ -38,8 +36,8 @@ export function Header() {
         <Link to="/" className="group flex shrink-0 items-center gap-2.5">
           <Logo className="h-9 w-9" />
           <div className="hidden flex-col leading-none sm:flex">
-            <span className="text-sm font-bold tracking-tight">RFL Studios</span>
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Radian Forge Labs</span>
+            <span className="text-sm font-bold tracking-tight">Radian Forge Labs</span>
+            <span className="text-[10px] uppercase tracking-widest text-muted-foreground">Technology Company</span>
           </div>
         </Link>
 
@@ -58,6 +56,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
+          <Button asChild size="sm" variant="ghost" className="hidden gap-1.5 md:inline-flex">
+            <a href="https://github.com/RadianForgeLabs-RFL" target="_blank" rel="noopener noreferrer">
+              <Github className="h-4 w-4" />
+              <span className="hidden md:inline">GitHub</span>
+            </a>
+          </Button>
           <SupportModal
             trigger={
               <Button size="sm" variant="outline" className="hidden gap-1.5 border-primary/40 bg-primary/10 text-foreground hover:bg-primary/20 md:inline-flex">

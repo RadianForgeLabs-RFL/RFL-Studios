@@ -13,23 +13,25 @@ export const Route = createFileRoute("/sitemap/xml")({
       .eq("coming_soon", false);
 
     const staticPages = [
-      "",
-      "/apps",
-      "/games",
-      "/ai-tools",
-      "/coming-soon",
+      { path: "", priority: "1.0", changefreq: "daily" },
+      { path: "/studios", priority: "0.9", changefreq: "weekly" },
+      { path: "/entertainment", priority: "0.9", changefreq: "weekly" },
+      { path: "/about", priority: "0.5", changefreq: "monthly" },
+      { path: "/support", priority: "0.5", changefreq: "monthly" },
+      { path: "/privacy", priority: "0.3", changefreq: "monthly" },
+      { path: "/terms", priority: "0.3", changefreq: "monthly" },
     ];
 
     let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
     // Add static pages
-    staticPages.forEach((path) => {
+    staticPages.forEach((page) => {
       sitemap += `
   <url>
-    <loc>${baseUrl}${path}</loc>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
+    <loc>${baseUrl}${page.path}</loc>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
   </url>`;
     });
 
