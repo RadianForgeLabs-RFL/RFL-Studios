@@ -5,6 +5,7 @@ import { allProductsQuery, homeCountsQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Code, Gamepad2, Building2, Users, Download, Zap, Github, Mail } from "lucide-react";
+import { NewsSection } from "@/components/site/NewsSection";
 
 const ProductCard = lazy(() => import("@/components/site/ProductCard").then(m => ({ default: m.ProductCard })));
 
@@ -147,6 +148,9 @@ function Home() {
           </Card>
         </div>
       </section>
+
+      {/* LATEST NEWS */}
+      <NewsSection />
 
       {/* LATEST FROM STUDIOS */}
       <section className="mx-auto max-w-7xl px-4 py-16">
