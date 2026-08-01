@@ -384,7 +384,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
           <TabsContent value="media" className="mt-4 space-y-6">
             <div>
               <Label className="mb-2 block">Icon</Label>
-              <ImageUpload value={icon_url} label="Icon" folder="icons" onChange={async (url) => {
+              <ImageUpload value={icon_url} label="Icon" folder="icons" useCase="icon" onChange={async (url) => {
                 setIconUrl(url);
                 if (productId) await supabase.from("products").update({ icon_url: url }).eq("id", productId);
                 qc.invalidateQueries({ queryKey: ["products"] });
@@ -392,7 +392,7 @@ function ProductDialog({ product, trigger }: { product?: any; trigger: React.Rea
             </div>
             <div>
               <Label className="mb-2 block">Banner</Label>
-              <ImageUpload value={banner_url} label="Banner" aspect="aspect-video" folder="banners" onChange={async (url) => {
+              <ImageUpload value={banner_url} label="Banner" aspect="aspect-video" folder="banners" useCase="banner" onChange={async (url) => {
                 setBannerUrl(url);
                 if (productId) await supabase.from("products").update({ banner_url: url }).eq("id", productId);
                 qc.invalidateQueries({ queryKey: ["products"] });
@@ -453,6 +453,7 @@ function ScreenshotsEditor({ productId }: { productId: string }) {
       <Label className="mb-2 block">Screenshots</Label>
       <MultiImageUpload
         folder="screenshots"
+        useCase="screenshot"
         items={(data ?? []).map((s: any) => ({ id: s.id, url: s.url }))}
         onAdd={async (url) => {
           const { error } = await supabase.from("screenshots").insert({ product_id: productId, url });

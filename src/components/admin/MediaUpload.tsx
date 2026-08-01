@@ -8,13 +8,67 @@ const BUCKET = "product-media";
 // ~100 years — private bucket needs signed URLs
 const SIGNED_EXPIRY = 60 * 60 * 24 * 365 * 100;
 
-export async function uploadToBucket(file: File, folder: string): Promise<string> {
-  const ext = file.name.split(".").pop() ?? "bin";
+// Image size configurations based on use case
+const IMAGE_SIZES: Record<string, { maxWidth: number; maxHeight: number; quality: number }> = {
+  icon: { maxWidth: 256, maxHeight: 256, quality: 0.9 },
+  banner: { maxWidth: 1920, maxHeight: 600, quality: 0.85 },
+  screenshot: { maxWidth: 1280, maxHeight: 720, quality: 0.8 },
+  default: { maxWidth: 1024, maxHeight: 1024, quality: 0.85 },
+};
+
+// Resize image using canvas
+async function resizeImage(file: File, sizeConfig: { maxWidth: number; maxHeight: number; quality: number }): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    img.onload = () => {
+      let { width, height } = img;
+      const { maxWidth, maxHeight, quality } = sizeConfig;
+
+      // Calculate new dimensions while maintaining aspect ratio
+      if (width > maxWidth) {
+        height = (height * maxWidth) / width;
+        width = maxWidth;
+      }
+      if (height > maxHeight) {
+        width = (width * maxHeight) / height;
+        height = maxHeight;
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+
+      ctx?.drawImage(img, 0, 0, width, height);
+
+      canvas.toBlob(
+        (blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Failed to resize image'));
+        },
+        'image/webp',
+        quality
+      );
+    };
+
+    img.onerror = () => reject(new Error('Failed to load image'));
+    img.src = URL.createObjectURL(file);
+  });
+}
+
+export async function uploadToBucket(file: File, folder: string, useCase: string = "default"): Promise<string> {
+  const sizeConfig = IMAGE_SIZES[useCase] || IMAGE_SIZES.default;
+  
+  // Resize image before upload
+  const resizedBlob = await resizeImage(file, sizeConfig);
+  
+  const ext = "webp"; // Always use WebP for better compression
   const path = `${folder}/${crypto.randomUUID()}.${ext}`;
-  const { error } = await supabase.storage.from(BUCKET).upload(path, file, {
+  const { error } = await supabase.storage.from(BUCKET).upload(path, resizedBlob, {
     cacheControl: "31536000",
     upsert: false,
-    contentType: file.type,
+    contentType: "image/webp",
   });
   if (error) throw error;
   const { data, error: sErr } = await supabase.storage.from(BUCKET).createSignedUrl(path, SIGNED_EXPIRY);
@@ -28,12 +82,14 @@ export function ImageUpload({
   folder,
   label = "Image",
   aspect = "aspect-square",
+  useCase = "default",
 }: {
   value: string | null;
   onChange: (url: string | null) => void;
   folder: string;
   label?: string;
   aspect?: string;
+  useCase?: string;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -42,7 +98,7 @@ export function ImageUpload({
     if (!f) return;
     setBusy(true);
     try {
-      const url = await uploadToBucket(f, folder);
+      const url = await uploadToBucket(f, folder, useCase);
       onChange(url);
       toast.success(`${label} uploaded`);
     } catch (err: any) {
@@ -81,11 +137,13 @@ export function MultiImageUpload({
   onAdd,
   onRemove,
   folder,
+  useCase = "screenshot",
 }: {
   items: { id?: string; url: string }[];
   onAdd: (url: string) => Promise<void> | void;
   onRemove: (item: { id?: string; url: string }) => Promise<void> | void;
   folder: string;
+  useCase?: string;
 }) {
   const ref = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -95,7 +153,7 @@ export function MultiImageUpload({
     setBusy(true);
     try {
       for (const f of files) {
-        const url = await uploadToBucket(f, folder);
+        const url = await uploadToBucket(f, folder, useCase);
         await onAdd(url);
       }
       toast.success(`${files.length} screenshot(s) uploaded`);

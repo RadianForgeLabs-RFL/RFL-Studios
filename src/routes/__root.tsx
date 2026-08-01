@@ -98,6 +98,9 @@ function RootComponent() {
   const getThemeClass = () => {
     if (currentPath.startsWith('/studios')) return 'theme-studios';
     if (currentPath.startsWith('/entertainment')) return 'theme-entertainment';
+    if (currentPath.startsWith('/apps') || currentPath.startsWith('/games')) return 'theme-home';
+    // Common pages use mixed blue-rose gradient
+    if (['/', '/about', '/support', '/privacy', '/terms'].includes(currentPath)) return 'theme-common';
     return 'theme-home';
   };
 
