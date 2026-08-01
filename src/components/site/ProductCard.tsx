@@ -7,8 +7,23 @@ import type { Product } from "@/lib/data";
 const KIND_LABEL: Record<string, string> = { app: "App", game: "Game", ai: "Tool" };
 const KIND_GRADIENT: Record<string, string> = {
   app: "from-blue-500/30 to-cyan-400/20",
-  game: "from-fuchsia-500/30 to-orange-400/20",
+  game: "from-rose-500/30 to-rose-400/20",
   ai: "from-emerald-500/30 to-teal-400/20",
+};
+const KIND_HOVER_COLOR: Record<string, string> = {
+  app: "group-hover:text-blue-500",
+  game: "group-hover:text-rose-500",
+  ai: "group-hover:text-emerald-500",
+};
+const KIND_BORDER_COLOR: Record<string, string> = {
+  app: "hover:border-blue-500/40",
+  game: "hover:border-rose-500/40",
+  ai: "hover:border-emerald-500/40",
+};
+const KIND_BADGE_COLOR: Record<string, string> = {
+  app: "bg-blue-500/90",
+  game: "bg-rose-500/90",
+  ai: "bg-emerald-500/90",
 };
 
 export function ProductCard({ p }: { p: Product }) {
@@ -19,7 +34,7 @@ export function ProductCard({ p }: { p: Product }) {
       params={{ slug: p.slug }}
       className="group block animate-fade-up"
     >
-      <Card className="glass hover:shadow-glow overflow-hidden border-white/5 bg-transparent transition-all duration-300 hover:-translate-y-1 hover:border-primary/40">
+      <Card className={`glass hover:shadow-glow overflow-hidden border-white/5 bg-transparent transition-all duration-300 hover:-translate-y-1 ${KIND_BORDER_COLOR[p.kind] ?? 'hover:border-primary/40'}`}>
         <div className={`relative h-32 overflow-hidden bg-gradient-to-br ${KIND_GRADIENT[p.kind]}`}>
           {p.banner_url && (
             <img
@@ -46,7 +61,7 @@ export function ProductCard({ p }: { p: Product }) {
               {KIND_LABEL[p.kind] ?? p.kind}
             </span>
             {(p as any).coming_soon && (
-              <span className="rounded-md bg-primary/90 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground shadow">
+              <span className={`rounded-md ${KIND_BADGE_COLOR[p.kind] ?? 'bg-primary/90'} px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-foreground shadow`}>
                 Coming Soon
               </span>
             )}
@@ -54,7 +69,7 @@ export function ProductCard({ p }: { p: Product }) {
 
         </div>
         <div className="p-4">
-          <h3 className="truncate text-base font-semibold text-foreground group-hover:text-primary">{p.name}</h3>
+          <h3 className={`truncate text-base font-semibold text-foreground ${KIND_HOVER_COLOR[p.kind] ?? 'group-hover:text-primary'}`}>{p.name}</h3>
           <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{p.tagline}</p>
           <div className="mt-3 flex flex-wrap items-center gap-1.5">
             <StatusBadge value={p.status} />
@@ -62,7 +77,7 @@ export function ProductCard({ p }: { p: Product }) {
           </div>
           {(p as any).coming_soon && (
             <div className="mt-3" onClick={(e) => e.stopPropagation()}>
-              <PreorderButton productId={p.id} slug={p.slug} />
+              <PreorderButton productId={p.id} slug={p.slug} kind={p.kind} />
             </div>
           )}
           {p.latest_version && !(p as any).coming_soon && (

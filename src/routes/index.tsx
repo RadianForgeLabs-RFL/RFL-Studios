@@ -53,7 +53,7 @@ function DivisionCard({
             ))}
           </div>
           
-          <Button className={`mt-8 bg-gradient-to-r from-${color}-500 to-${color}-400 text-white hover:bg-gradient-to-r hover:from-rose-500 hover:to-rose-400 hover:opacity-90`}>
+          <Button className={`mt-8 bg-gradient-to-r from-${color}-500 to-${color}-400 text-white hover:opacity-90`}>
             Explore <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
@@ -80,7 +80,7 @@ function Home() {
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-32">
           <div className="max-w-4xl">
             <h1 className="text-5xl font-bold leading-tight tracking-tight md:text-7xl">
-              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">Radian Forge Labs</span>
+              <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-rose-500 bg-clip-text text-transparent">Radian Forge Labs</span>
             </h1>
             <p className="mt-6 max-w-2xl text-xl text-muted-foreground md:text-2xl">
               Building the future through professional software and immersive gaming experiences.
@@ -89,7 +89,7 @@ function Home() {
               <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-sky-500 text-white hover:opacity-90">
                 <Link to="/studios">RFL Studios</Link>
               </Button>
-              <Button asChild size="lg" className="bg-gradient-to-r from-purple-500 to-pink-400 text-white hover:opacity-90">
+              <Button asChild size="lg" className="bg-gradient-to-r from-rose-500 to-rose-400 text-white hover:opacity-90">
                 <Link to="/entertainment">RFL Entertainment</Link>
               </Button>
 
@@ -118,7 +118,7 @@ function Home() {
             description="Immersive PC and Android games, from casual play to epic adventures."
             icon={EntertainmentIcon}
             to="/entertainment"
-            color="purple"
+            color="rose"
             stats={[
               { label: "Games", value: c.games },
               { label: "Players", value: c.playerCount },

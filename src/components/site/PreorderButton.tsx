@@ -6,16 +6,24 @@ import { useAuth } from "@/lib/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
+const KIND_GRADIENT: Record<string, string> = {
+  app: "bg-gradient-brand",
+  game: "bg-gradient-to-r from-rose-500 to-rose-400",
+  ai: "bg-gradient-to-r from-emerald-500 to-emerald-400",
+};
+
 export function PreorderButton({
   productId,
   slug,
   size = "sm",
   className = "",
+  kind = "app",
 }: {
   productId: string;
   slug?: string;
   size?: "sm" | "lg" | "default";
   className?: string;
+  kind?: string;
 }) {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -71,7 +79,7 @@ export function PreorderButton({
       size={size}
       onClick={onClick}
       disabled={loading}
-      className={`${preordered ? "" : "bg-gradient-brand text-brand-foreground shadow-glow"} ${className}`}
+      className={`${preordered ? "" : `${KIND_GRADIENT[kind] ?? "bg-gradient-brand"} text-brand-foreground shadow-glow`} ${className}`}
       variant={preordered ? "outline" : "default"}
     >
       {preordered ? <BellRing className="mr-2 h-4 w-4" /> : <Bell className="mr-2 h-4 w-4" />}

@@ -36,20 +36,20 @@ function Entertainment() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden border-b border-purple-500/10 bg-gradient-to-b from-purple-500/5 via-transparent to-transparent">
+      <section className="relative overflow-hidden border-b border-rose-500/10 bg-gradient-to-b from-rose-500/5 via-transparent to-transparent">
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-32">
           <div className="max-w-3xl">
             <h1 className="text-5xl font-bold leading-tight tracking-tight md:text-7xl">
-              <span className="bg-gradient-to-r from-purple-500 to-pink-400 bg-clip-text text-transparent">RFL Entertainment</span>
+              <span className="bg-gradient-to-r from-rose-500 to-rose-400 bg-clip-text text-transparent">RFL Entertainment</span>
             </h1>
             <p className="mt-6 max-w-2xl text-xl text-muted-foreground">
               Immersive gaming experiences for PC and Android. From casual play to epic adventures.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg" className="bg-gradient-to-r from-purple-500 to-pink-400 text-white hover:opacity-90">
+              <Button asChild size="lg" className="bg-gradient-to-r from-rose-500 to-rose-400 text-white hover:opacity-90">
                 <Link to="/games">Browse Games</Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
+              <Button asChild size="lg" variant="outline" className="border-rose-500/30 text-rose-400 hover:bg-rose-500/10">
                 <Link to="/games">Coming Soon</Link>
               </Button>
             </div>
@@ -97,16 +97,16 @@ function Entertainment() {
       {/* STATS */}
       <section className="mx-auto max-w-7xl px-4 py-16">
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-          <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
-            <div className="text-4xl font-bold text-purple-500">{counts.data?.games ?? 0}</div>
+          <Card className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6 text-center">
+            <div className="text-4xl font-bold text-rose-500">{counts.data?.games ?? 0}</div>
             <div className="mt-2 text-sm text-muted-foreground">Games</div>
           </Card>
-          <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
-            <div className="text-4xl font-bold text-purple-500">10K+</div>
+          <Card className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6 text-center">
+            <div className="text-4xl font-bold text-rose-500">10K+</div>
             <div className="mt-2 text-sm text-muted-foreground">Players</div>
           </Card>
-          <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
-            <div className="text-4xl font-bold text-purple-500">Free</div>
+          <Card className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6 text-center">
+            <div className="text-4xl font-bold text-rose-500">Free</div>
             <div className="mt-2 text-sm text-muted-foreground">To Play</div>
           </Card>
         </div>
@@ -125,9 +125,9 @@ function Entertainment() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Suspense fallback={Array(6).fill(0).map((_, i) => (
-            <Card key={i} className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6">
-              <div className="h-40 bg-purple-500/10 rounded animate-pulse" />
-              <div className="mt-4 h-4 w-3/4 bg-purple-500/10 rounded" />
+            <Card key={i} className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6">
+              <div className="h-40 bg-rose-500/10 rounded animate-pulse" />
+              <div className="mt-4 h-4 w-3/4 bg-rose-500/10 rounded" />
             </Card>
           ))}>
             {(games.data ?? []).slice(0, 6).map((p) => <ProductCard key={p.id} p={p} />)}
@@ -148,9 +148,9 @@ function Entertainment() {
         </div>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <Suspense fallback={Array(3).fill(0).map((_, i) => (
-            <Card key={i} className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6">
-              <div className="h-40 bg-purple-500/10 rounded animate-pulse" />
-              <div className="mt-4 h-4 w-3/4 bg-purple-500/10 rounded" />
+            <Card key={i} className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6">
+              <div className="h-40 bg-rose-500/10 rounded animate-pulse" />
+              <div className="mt-4 h-4 w-3/4 bg-rose-500/10 rounded" />
             </Card>
           ))}>
             {(comingSoon.data ?? []).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
