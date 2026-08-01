@@ -62,6 +62,26 @@ export const productListQuery = (kind?: ProductKind | "all") =>
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
+// Coming soon products (published AND coming soon)
+export const comingSoonQuery = (kind?: ProductKind | "all") =>
+  queryOptions({
+    queryKey: ["products", "coming-soon", kind ?? "all"],
+    queryFn: async () => {
+      let q = supabase
+        .from("products")
+        .select("*")
+        .eq("published", true)
+        .eq("coming_soon", true)
+        .order("homepage_order");
+      if (kind && kind !== "all") q = q.eq("kind", kind);
+      const { data, error } = await q;
+      if (error) throw error;
+      return (data ?? []) as unknown as Product[];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+
 export const adminProductListQuery = () =>
   queryOptions({
     queryKey: ["products", "admin-all"],

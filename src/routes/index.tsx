@@ -76,7 +76,7 @@ function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden border-b border-white/5 bg-gradient-to-b from-blue-500/5 via-purple-500/5 to-transparent">
         <div className="mx-auto max-w-7xl px-4 py-20 md:py-32">
           <div className="max-w-4xl">
             <h1 className="text-5xl font-bold leading-tight tracking-tight md:text-7xl">

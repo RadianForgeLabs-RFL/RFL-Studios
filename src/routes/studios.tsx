@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { productListQuery, homeCountsQuery } from "@/lib/data";
+import { productListQuery, comingSoonQuery, homeCountsQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Code, Smartphone, Download, Zap } from "lucide-react";
@@ -30,7 +30,7 @@ function FeatureCard({ icon: Icon, title, description }: { icon: any, title: str
 
 function Studios() {
   const apps = useQuery(productListQuery("app"));
-  const comingSoon = useQuery(productListQuery("app"));
+  const comingSoon = useQuery(comingSoonQuery("app"));
   const counts = useQuery(homeCountsQuery());
 
   return (
@@ -143,7 +143,7 @@ function Studios() {
               <div className="mt-4 h-4 w-3/4 bg-blue-500/10 rounded" />
             </Card>
           ))}>
-            {(comingSoon.data ?? []).filter((p: any) => p.coming_soon).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
+            {(comingSoon.data ?? []).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
           </Suspense>
         </div>
       </section>
