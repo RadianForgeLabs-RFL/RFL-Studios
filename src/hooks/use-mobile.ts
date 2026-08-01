@@ -28,3 +28,8 @@ export function useMobile() {
 
   return { isMobile, isLowEnd };
 }
+
+export function useIsMobile() {
+  const { isMobile } = useMobile();
+  return isMobile;
+}
