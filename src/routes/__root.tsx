@@ -138,11 +138,11 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <MaintenanceWrapper>
         <ThemeProvider>
-          <Suspense fallback={<div className="h-16 border-b border-white/5" />}>
-            <Header />
-          </Suspense>
           <Suspense fallback={null}>
             <AnnouncementBar />
+          </Suspense>
+          <Suspense fallback={<div className="h-16 border-b border-white/5" />}>
+            <Header />
           </Suspense>
           <main className="min-h-[70vh]"><Outlet /></main>
           <Suspense fallback={<div className="h-20 border-t border-white/5" />}>
