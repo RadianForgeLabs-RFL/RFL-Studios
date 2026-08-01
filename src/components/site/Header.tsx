@@ -12,11 +12,11 @@ import { Logo } from "./Logo";
 import { SupportModal } from "./SupportModal";
 
 const NAV = [
-  { to: "/", label: "Home" },
-  { to: "/studios", label: "Studios" },
-  { to: "/entertainment", label: "Entertainment" },
-  { to: "/about", label: "About" },
-  { to: "/support", label: "Contact" },
+  { to: "/", label: "Home", color: "blue" },
+  { to: "/studios", label: "Studios", color: "blue" },
+  { to: "/entertainment", label: "Entertainment", color: "rose" },
+  { to: "/about", label: "About", color: "purple" },
+  { to: "/support", label: "Contact", color: "purple" },
 ] as const;
 
 export function Header() {
@@ -53,8 +53,8 @@ export function Header() {
             <Link
               key={n.to}
               to={n.to}
-              className="rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-foreground"
-              activeProps={{ className: "rounded-md px-3 py-1.5 text-sm text-foreground bg-white/10" }}
+              className={`rounded-md px-3 py-1.5 text-sm text-muted-foreground transition hover:bg-white/5 hover:text-${n.color}-500`}
+              activeProps={{ className: `rounded-md px-3 py-1.5 text-sm text-${n.color}-500 bg-${n.color}-500/10` }}
               activeOptions={{ exact: n.to === "/" }}
             >
               {n.label}
@@ -110,7 +110,7 @@ export function Header() {
               <nav className="mt-8 flex flex-col gap-1">
                 {NAV.map((n) => (
                   <Link key={n.to} to={n.to} onClick={() => setOpen(false)}
-                    className="rounded-md px-3 py-2 text-sm text-foreground/80 hover:bg-white/10 hover:text-foreground">
+                    className={`rounded-md px-3 py-2 text-sm text-foreground/80 hover:bg-white/10 hover:text-${n.color}-500`}>
                     {n.label}
                   </Link>
                 ))}

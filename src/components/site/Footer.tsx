@@ -19,24 +19,24 @@ export function Footer() {
           </p>
 
           <div className="mt-4 flex gap-2">
-            <a href="https://github.com/RadianForgeLabs-RFL" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-primary"><Github className="h-4 w-4" /></a>
-            <a href="https://instagram.com/radianforgelabs" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-primary"><Instagram className="h-4 w-4" /></a>
+            <a href="https://github.com/RadianForgeLabs-RFL" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-blue-500"><Github className="h-4 w-4" /></a>
+            <a href="https://instagram.com/radianforgelabs" target="_blank" rel="noreferrer" className="grid h-9 w-9 place-items-center rounded-lg glass hover:text-rose-500"><Instagram className="h-4 w-4" /></a>
           </div>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Divisions</h4>
+          <h4 className="mb-3 text-sm font-semibold text-blue-500">Divisions</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/studios" className="hover:text-foreground">RFL Studios</Link></li>
-            <li><Link to="/entertainment" className="hover:text-foreground">RFL Entertainment</Link></li>
+            <li><Link to="/studios" className="hover:text-blue-500">RFL Studios</Link></li>
+            <li><Link to="/entertainment" className="hover:text-rose-500">RFL Entertainment</Link></li>
           </ul>
         </div>
         <div>
-          <h4 className="mb-3 text-sm font-semibold">Company</h4>
+          <h4 className="mb-3 text-sm font-semibold text-purple-500">Company</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
-            <li><Link to="/about" className="hover:text-foreground">About</Link></li>
-            <li><Link to="/support" className="hover:text-foreground">Contact</Link></li>
-            <li><Link to="/privacy" className="hover:text-foreground">Privacy</Link></li>
-            <li><Link to="/terms" className="hover:text-foreground">Terms</Link></li>
+            <li><Link to="/about" className="hover:text-blue-500">About</Link></li>
+            <li><Link to="/support" className="hover:text-purple-500">Contact</Link></li>
+            <li><Link to="/privacy" className="hover:text-rose-500">Privacy</Link></li>
+            <li><Link to="/terms" className="hover:text-blue-500">Terms</Link></li>
           </ul>
         </div>
       </div>
