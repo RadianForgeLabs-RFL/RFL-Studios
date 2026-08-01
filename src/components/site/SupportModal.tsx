@@ -7,7 +7,7 @@ import qrAsset from "@/assets/upi-qr.png.asset.json";
 
 const UPI_ID = "8838214174@yapl";
 
-export function SupportModal({ trigger }: { trigger: React.ReactNode }) {
+export function SupportModal({ trigger, title = "Support RFL Studios" }: { trigger: React.ReactNode; title?: string }) {
   const [copied, setCopied] = useState(false);
   const copy = async () => {
     try {
@@ -25,7 +25,7 @@ export function SupportModal({ trigger }: { trigger: React.ReactNode }) {
       <DialogContent className="glass-strong max-w-md border-white/10 bg-background/95 text-foreground">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-2xl">
-            <Coffee className="h-6 w-6 text-primary" /> Support RFL Studios
+            <Coffee className="h-6 w-6 text-primary" /> {title}
           </DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
@@ -44,7 +44,7 @@ export function SupportModal({ trigger }: { trigger: React.ReactNode }) {
           </div>
           <p className="text-center text-sm text-muted-foreground">
             Your support helps us build and improve free apps and open-source projects.
-            Every contribution, big or small, is greatly appreciated. Thank you for supporting RFL Studios!
+            Every contribution, big or small, is greatly appreciated. Thank you for supporting us!
           </p>
         </div>
       </DialogContent>

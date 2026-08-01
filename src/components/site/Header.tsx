@@ -24,6 +24,13 @@ export function Header() {
   const { isAdmin } = useIsAdmin(user?.id);
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const currentPath = router.state.location.pathname;
+
+  const getSupportTitle = () => {
+    if (currentPath.startsWith('/studios')) return "Support RFL Studios";
+    if (currentPath.startsWith('/entertainment')) return "Support RFL Entertainment";
+    return "Support RadianForgeLabs";
+  };
 
   const signOut = async () => {
     await supabase.auth.signOut();
@@ -63,6 +70,7 @@ export function Header() {
             </a>
           </Button>
           <SupportModal
+            title={getSupportTitle()}
             trigger={
               <Button size="sm" variant="outline" className="hidden gap-1.5 border-primary/40 bg-primary/10 text-foreground hover:bg-primary/20 md:inline-flex">
                 <Coffee className="h-4 w-4 text-primary" />
@@ -108,6 +116,7 @@ export function Header() {
                 ))}
                 <div className="mt-4 border-t border-white/10 pt-4">
                   <SupportModal
+                    title={getSupportTitle()}
                     trigger={
                       <Button className="w-full bg-gradient-brand text-brand-foreground shadow-glow">
                         <Coffee className="mr-2 h-4 w-4" /> Buy Me a Coffee

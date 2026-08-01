@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { lazy, Suspense } from "react";
-import { homeCountsQuery, productListQuery } from "@/lib/data";
+import { allProductsQuery, homeCountsQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowRight, Code, Gamepad2, Building2, Users, Download, Zap, Github, Mail } from "lucide-react";
@@ -64,8 +64,8 @@ function DivisionCard({
 
 function Home() {
   const counts = useQuery(homeCountsQuery());
-  const latestApps = useQuery(productListQuery("app"));
-  const latestGames = useQuery(productListQuery("game"));
+  const latestApps = useQuery(allProductsQuery("app"));
+  const latestGames = useQuery(allProductsQuery("game"));
   const c = counts.data ?? { apps: 0, games: 0, userCount: "10K+", playerCount: "10K+", downloadsCount: "50K+", studiosIcon: "Code", entertainmentIcon: "Gamepad2" };
 
   // Dynamic icon mapping

@@ -92,6 +92,14 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   const router = useRouter();
   const { isMobile, isLowEnd } = useMobile();
+  const currentPath = router.state.location.pathname;
+
+  // Determine theme based on route
+  const getThemeClass = () => {
+    if (currentPath.startsWith('/studios')) return 'theme-studios';
+    if (currentPath.startsWith('/entertainment')) return 'theme-entertainment';
+    return 'theme-home';
+  };
 
   useEffect(() => {
     // Apply performance optimizations for mobile/low-end devices
@@ -103,6 +111,12 @@ function RootComponent() {
       document.documentElement.classList.remove('reduce-effects');
     }
   }, [isMobile, isLowEnd]);
+
+  useEffect(() => {
+    // Apply theme class to body
+    const themeClass = getThemeClass();
+    document.body.className = `min-h-screen ${themeClass}`;
+  }, [currentPath]);
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
