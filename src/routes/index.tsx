@@ -53,7 +53,7 @@ function DivisionCard({
             ))}
           </div>
           
-          <Button className={`mt-8 bg-gradient-to-r from-${color}-500 to-${color}-400 text-white hover:opacity-90`}>
+          <Button className={`mt-8 bg-gradient-to-r from-${color}-500 to-${color}-400 text-white hover:bg-gradient-to-r hover:from-rose-500 hover:to-rose-400 hover:opacity-90`}>
             Explore <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>

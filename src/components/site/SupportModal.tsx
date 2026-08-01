@@ -3,9 +3,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Coffee, Copy, Check } from "lucide-react";
 import { toast } from "sonner";
-import qrAsset from "@/assets/upi-qr.png.asset.json";
 
 const UPI_ID = "8838214174@yapl";
+const QR_CODE_URL = "/upi-qr.jpg";
 
 export function SupportModal({ trigger, title = "Support RFL Studios" }: { trigger: React.ReactNode; title?: string }) {
   const [copied, setCopied] = useState(false);
@@ -30,7 +30,7 @@ export function SupportModal({ trigger, title = "Support RFL Studios" }: { trigg
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
           <div className="rounded-2xl border border-white/10 bg-white p-3 shadow-glow">
-            <img src={qrAsset.url} alt="UPI QR code" className="h-56 w-56 object-contain" />
+            <img src={QR_CODE_URL} alt="UPI QR code" className="h-56 w-56 object-contain" />
           </div>
           <div className="w-full">
             <div className="text-center text-xs uppercase tracking-widest text-muted-foreground">UPI ID</div>
