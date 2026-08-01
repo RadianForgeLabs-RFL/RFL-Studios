@@ -29,13 +29,36 @@ export default defineConfig({
             if (id.includes('lucide-react')) {
               return 'icons';
             }
+            if (id.includes('recharts') || id.includes('embla-carousel')) {
+              return 'charts';
+            }
+            if (id.includes('date-fns') || id.includes('react-day-picker')) {
+              return 'date';
+            }
           },
         },
       },
       chunkSizeWarningLimit: 1000,
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug'],
+        },
+      },
+      cssCodeSplit: true,
+      reportCompressedSize: false,
+      sourcemap: false,
     },
     optimizeDeps: {
       include: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
+      exclude: ['@lovable.dev/cloud-auth-js'],
+    },
+    server: {
+      fs: {
+        strict: false,
+      },
     },
   },
 });

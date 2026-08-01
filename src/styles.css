@@ -4,6 +4,42 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Performance optimizations */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* GPU acceleration for animations */
+.glass,
+.glass-strong,
+.animate-fade-up,
+.animate-fade-in,
+.hover\:scale-105 {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Reduce paint operations */
+img,
+video {
+  contain: layout style paint;
+}
+
+/* Optimize scrolling */
+main {
+  contain: layout style;
+}
+
+/* CSS containment for better performance */
+.card {
+  contain: layout style;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -20,8 +20,8 @@ export const Route = createFileRoute("/entertainment")({
 
 function FeatureCard({ icon: Icon, title, description }: { icon: any, title: string, description: string }) {
   return (
-    <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 transition-all hover:border-purple-500/40 hover:shadow-lg hover:shadow-purple-500/10">
-      <Icon className="h-8 w-8 text-purple-500" />
+    <Card className="border border-rose-500/20 bg-gradient-to-br from-rose-500/5 to-transparent p-6 transition-all hover:border-rose-500/40 hover:shadow-lg hover:shadow-rose-500/10">
+      <Icon className="h-8 w-8 text-rose-500" />
       <h3 className="mt-4 text-lg font-semibold">{title}</h3>
       <p className="mt-2 text-sm text-muted-foreground">{description}</p>
     </Card>

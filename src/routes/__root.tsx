@@ -3,18 +3,20 @@ import {
   Outlet, Link, createRootRouteWithContext, useRouter,
   HeadContent, Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, lazy, Suspense, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
-import { AnnouncementBar } from "@/components/site/AnnouncementBar";
 import { ThemeProvider } from "@/components/site/ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { useMobile } from "@/hooks/use-mobile";
+
+// Lazy load heavy components
+const Header = lazy(() => import("@/components/site/Header").then(m => ({ default: m.Header })));
+const Footer = lazy(() => import("@/components/site/Footer").then(m => ({ default: m.Footer })));
+const AnnouncementBar = lazy(() => import("@/components/site/AnnouncementBar").then(m => ({ default: m.AnnouncementBar })));
 
 function NotFoundComponent() {
   return (
@@ -62,6 +64,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "RFL Studios" },
       { name: "twitter:card", content: "summary_large_image" },
       { httpEquiv: "X-DNS-Prefetch-Control", content: "on" },
+      { name: "robots", content: "index, follow" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -71,6 +74,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" },
       { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "preconnect", href: "https://vblulnytbpvdeziushxw.supabase.co" },
     ],
   }),
   shellComponent: RootShell,
@@ -134,10 +138,16 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <MaintenanceWrapper>
         <ThemeProvider>
-          <AnnouncementBar />
-          <Header />
+          <Suspense fallback={<div className="h-16 border-b border-white/5" />}>
+            <Header />
+          </Suspense>
+          <Suspense fallback={null}>
+            <AnnouncementBar />
+          </Suspense>
           <main className="min-h-[70vh]"><Outlet /></main>
-          <Footer />
+          <Suspense fallback={<div className="h-20 border-t border-white/5" />}>
+            <Footer />
+          </Suspense>
           <Toaster position="top-right" />
         </ThemeProvider>
       </MaintenanceWrapper>
