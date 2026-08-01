@@ -33,7 +33,6 @@ export default defineConfig({
         },
       },
       chunkSizeWarningLimit: 1000,
-      minify: 'terser',
     },
     optimizeDeps: {
       include: ['react', 'react-dom', '@tanstack/react-query', '@tanstack/react-router'],
