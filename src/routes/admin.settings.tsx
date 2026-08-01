@@ -17,6 +17,11 @@ function AdminSettings() {
   const qc = useQueryClient();
   const [message, setMessage] = useState("");
   const [maintenance, setMaintenance] = useState(false);
+  const [userCount, setUserCount] = useState("10K+");
+  const [playerCount, setPlayerCount] = useState("10K+");
+  const [downloadsCount, setDownloadsCount] = useState("50K+");
+  const [studiosIcon, setStudiosIcon] = useState("Code");
+  const [entertainmentIcon, setEntertainmentIcon] = useState("Gamepad2");
 
   const ann = useQuery({ queryKey: ["ann-all"], queryFn: async () => (await supabase.from("announcements").select("*").order("created_at", { ascending: false })).data ?? [] });
   const set = useQuery({ queryKey: ["settings-all"], queryFn: async () => (await supabase.from("settings").select("*")).data ?? [] });
@@ -24,6 +29,18 @@ function AdminSettings() {
   useEffect(() => {
     const m = set.data?.find((s: any) => s.key === "maintenance_mode");
     setMaintenance(m?.value === true);
+    
+    const uc = set.data?.find((s: any) => s.key === "user_count");
+    const pc = set.data?.find((s: any) => s.key === "player_count");
+    const dc = set.data?.find((s: any) => s.key === "downloads_count");
+    const si = set.data?.find((s: any) => s.key === "studios_icon");
+    const ei = set.data?.find((s: any) => s.key === "entertainment_icon");
+    
+    if (uc) setUserCount(uc.value);
+    if (pc) setPlayerCount(pc.value);
+    if (dc) setDownloadsCount(dc.value);
+    if (si) setStudiosIcon(si.value);
+    if (ei) setEntertainmentIcon(ei.value);
   }, [set.data]);
 
   const addAnn = useMutation({
@@ -41,6 +58,19 @@ function AdminSettings() {
   const toggleMaintenance = useMutation({
     mutationFn: async (v: boolean) => { const { error } = await supabase.from("settings").upsert({ key: "maintenance_mode", value: v as any }); if (error) throw error; },
     onSuccess: () => { toast.success("Saved"); qc.invalidateQueries({ queryKey: ["settings-all"] }); },
+  });
+  const updateStats = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.from("settings").upsert([
+        { key: "user_count", value: userCount },
+        { key: "player_count", value: playerCount },
+        { key: "downloads_count", value: downloadsCount },
+        { key: "studios_icon", value: studiosIcon },
+        { key: "entertainment_icon", value: entertainmentIcon },
+      ]);
+      if (error) throw error;
+    },
+    onSuccess: () => { toast.success("Stats updated"); qc.invalidateQueries({ queryKey: ["settings-all"] }); qc.invalidateQueries({ queryKey: ["home-counts"] }); },
   });
 
   return (
@@ -81,6 +111,33 @@ function AdminSettings() {
           <input type="checkbox" checked={maintenance} onChange={(e) => { setMaintenance(e.target.checked); toggleMaintenance.mutate(e.target.checked); }} />
           Enable maintenance mode
         </label>
+      </Card>
+
+      <Card className="glass mt-6 border-white/5 bg-transparent p-5">
+        <h2 className="text-lg font-semibold">Company Statistics</h2>
+        <div className="mt-4 space-y-4">
+          <div>
+            <Label>User Count</Label>
+            <Input value={userCount} onChange={(e) => setUserCount(e.target.value)} placeholder="10K+" />
+          </div>
+          <div>
+            <Label>Player Count</Label>
+            <Input value={playerCount} onChange={(e) => setPlayerCount(e.target.value)} placeholder="10K+" />
+          </div>
+          <div>
+            <Label>Downloads Count</Label>
+            <Input value={downloadsCount} onChange={(e) => setDownloadsCount(e.target.value)} placeholder="50K+" />
+          </div>
+          <div>
+            <Label>RFL Studios Icon (Lucide icon name)</Label>
+            <Input value={studiosIcon} onChange={(e) => setStudiosIcon(e.target.value)} placeholder="Code" />
+          </div>
+          <div>
+            <Label>RFL Entertainment Icon (Lucide icon name)</Label>
+            <Input value={entertainmentIcon} onChange={(e) => setEntertainmentIcon(e.target.value)} placeholder="Gamepad2" />
+          </div>
+          <Button onClick={() => updateStats.mutate()} className="bg-gradient-brand text-brand-foreground shadow-glow">Update Stats</Button>
+        </div>
       </Card>
     </div>
   );

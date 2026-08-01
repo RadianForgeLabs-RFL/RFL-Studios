@@ -95,7 +95,7 @@ function Entertainment() {
 
       {/* STATS */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
             <div className="text-4xl font-bold text-purple-500">{counts.data?.games ?? 0}</div>
             <div className="mt-2 text-sm text-muted-foreground">Games</div>
@@ -103,10 +103,6 @@ function Entertainment() {
           <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
             <div className="text-4xl font-bold text-purple-500">10K+</div>
             <div className="mt-2 text-sm text-muted-foreground">Players</div>
-          </Card>
-          <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
-            <div className="text-4xl font-bold text-purple-500">4.8</div>
-            <div className="mt-2 text-sm text-muted-foreground">Avg Rating</div>
           </Card>
           <Card className="border border-purple-500/20 bg-gradient-to-br from-purple-500/5 to-transparent p-6 text-center">
             <div className="text-4xl font-bold text-purple-500">Free</div>

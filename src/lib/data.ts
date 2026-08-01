@@ -150,16 +150,28 @@ export const homeCountsQuery = () =>
   queryOptions({
     queryKey: ["home-counts"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data: products, error: productsError } = await supabase
         .from("products")
         .select("kind, coming_soon, published")
         .eq("published", true)
         .eq("coming_soon", false);
-      if (error) throw error;
-      const rows = data ?? [];
+      if (productsError) throw productsError;
+      const rows = products ?? [];
+      
+      // Get settings for custom counts
+      const { data: settings, error: settingsError } = await supabase
+        .from("settings")
+        .select("user_count, player_count, downloads_count, studios_icon, entertainment_icon")
+        .single();
+      
       return {
         apps: rows.filter((r: any) => r.kind === "app").length,
         games: rows.filter((r: any) => r.kind === "game").length,
+        userCount: settings?.user_count ?? "10K+",
+        playerCount: settings?.player_count ?? "10K+",
+        downloadsCount: settings?.downloads_count ?? "50K+",
+        studiosIcon: settings?.studios_icon ?? "Code",
+        entertainmentIcon: settings?.entertainment_icon ?? "Gamepad2",
       };
     },
     staleTime: 5 * 60 * 1000, // 5 minutes

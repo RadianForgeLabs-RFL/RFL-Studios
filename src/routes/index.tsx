@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { homeCountsQuery, productListQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Code, Gamepad2, Building2, Users, Download, Star, Zap, Github, Mail } from "lucide-react";
+import { ArrowRight, Code, Gamepad2, Building2, Users, Download, Zap, Github, Mail } from "lucide-react";
 
 const ProductCard = lazy(() => import("@/components/site/ProductCard").then(m => ({ default: m.ProductCard })));
 
@@ -66,6 +66,12 @@ function Home() {
   const counts = useQuery(homeCountsQuery());
   const latestApps = useQuery(productListQuery("app"));
   const latestGames = useQuery(productListQuery("game"));
+  const c = counts.data ?? { apps: 0, games: 0, userCount: "10K+", playerCount: "10K+", downloadsCount: "50K+", studiosIcon: "Code", entertainmentIcon: "Gamepad2" };
+
+  // Dynamic icon mapping
+  const iconMap: Record<string, any> = { Code, Gamepad2, Building2, Users, Download, Zap, Github, Mail };
+  const StudiosIcon = iconMap[c.studiosIcon] || Code;
+  const EntertainmentIcon = iconMap[c.entertainmentIcon] || Gamepad2;
 
   return (
     <div>
@@ -97,24 +103,24 @@ function Home() {
         <div className="mt-8 grid gap-8 md:grid-cols-2">
           <DivisionCard
             title="RFL Studios"
-            description="Professional Windows and Android applications, AI tools, utilities, and developer software."
-            icon={Code}
+            description="Professional Windows and Android applications, utilities, and developer software."
+            icon={StudiosIcon}
             to="/studios"
             color="blue"
             stats={[
-              { label: "Applications", value: counts.data?.apps ?? 0 },
-              { label: "AI Tools", value: "5+" },
+              { label: "Applications", value: c.apps },
+              { label: "Users", value: c.userCount },
             ]}
           />
           <DivisionCard
             title="RFL Entertainment"
             description="Immersive PC and Android games, from casual play to epic adventures."
-            icon={Gamepad2}
+            icon={EntertainmentIcon}
             to="/entertainment"
             color="purple"
             stats={[
-              { label: "Games", value: counts.data?.games ?? 0 },
-              { label: "Players", value: "10K+" },
+              { label: "Games", value: c.games },
+              { label: "Players", value: c.playerCount },
             ]}
           />
         </div>
@@ -122,7 +128,7 @@ function Home() {
 
       {/* COMPANY STATS */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <Card className="border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 text-center">
             <Building2 className="mx-auto h-8 w-8 text-primary" />
             <div className="mt-4 text-3xl font-bold">2</div>
@@ -130,18 +136,13 @@ function Home() {
           </Card>
           <Card className="border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 text-center">
             <Download className="mx-auto h-8 w-8 text-primary" />
-            <div className="mt-4 text-3xl font-bold">50K+</div>
+            <div className="mt-4 text-3xl font-bold">{c.downloadsCount}</div>
             <div className="mt-2 text-sm text-muted-foreground">Downloads</div>
           </Card>
           <Card className="border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 text-center">
             <Users className="mx-auto h-8 w-8 text-primary" />
-            <div className="mt-4 text-3xl font-bold">10K+</div>
+            <div className="mt-4 text-3xl font-bold">{c.userCount}</div>
             <div className="mt-2 text-sm text-muted-foreground">Users</div>
-          </Card>
-          <Card className="border border-white/10 bg-gradient-to-br from-white/5 to-transparent p-6 text-center">
-            <Star className="mx-auto h-8 w-8 text-primary" />
-            <div className="mt-4 text-3xl font-bold">4.8</div>
-            <div className="mt-2 text-sm text-muted-foreground">Avg Rating</div>
           </Card>
         </div>
       </section>

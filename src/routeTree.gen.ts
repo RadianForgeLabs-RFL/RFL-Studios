@@ -9,11 +9,15 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as SupportRouteImport } from './routes/support'
+import { Route as StudiosRouteImport } from './routes/studios'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ProjectsRouteImport } from './routes/projects'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as GamesRouteImport } from './routes/games'
+import { Route as EntertainmentRouteImport } from './routes/entertainment'
 import { Route as DownloadsRouteImport } from './routes/downloads'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppsRouteImport } from './routes/apps'
@@ -29,9 +33,19 @@ import { Route as AdminProductsRouteImport } from './routes/admin.products'
 import { Route as AdminNewsRouteImport } from './routes/admin.news'
 import { Route as AuthenticatedAccountRouteImport } from './routes/_authenticated/account'
 
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
   path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StudiosRoute = StudiosRouteImport.update({
+  id: '/studios',
+  path: '/studios',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -49,9 +63,19 @@ const ProjectsRoute = ProjectsRouteImport.update({
   path: '/projects',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GamesRoute = GamesRouteImport.update({
   id: '/games',
   path: '/games',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntertainmentRoute = EntertainmentRouteImport.update({
+  id: '/entertainment',
+  path: '/entertainment',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DownloadsRoute = DownloadsRouteImport.update({
@@ -131,11 +155,15 @@ export interface FileRoutesByFullPath {
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
+  '/entertainment': typeof EntertainmentRoute
   '/games': typeof GamesRoute
+  '/privacy': typeof PrivacyRoute
   '/projects': typeof ProjectsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/studios': typeof StudiosRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
@@ -150,11 +178,15 @@ export interface FileRoutesByTo {
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
+  '/entertainment': typeof EntertainmentRoute
   '/games': typeof GamesRoute
+  '/privacy': typeof PrivacyRoute
   '/projects': typeof ProjectsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/studios': typeof StudiosRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
@@ -172,11 +204,15 @@ export interface FileRoutesById {
   '/apps': typeof AppsRoute
   '/auth': typeof AuthRoute
   '/downloads': typeof DownloadsRoute
+  '/entertainment': typeof EntertainmentRoute
   '/games': typeof GamesRoute
+  '/privacy': typeof PrivacyRoute
   '/projects': typeof ProjectsRoute
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/studios': typeof StudiosRoute
   '/support': typeof SupportRoute
+  '/terms': typeof TermsRoute
   '/_authenticated/account': typeof AuthenticatedAccountRoute
   '/admin/news': typeof AdminNewsRoute
   '/admin/products': typeof AdminProductsRoute
@@ -194,11 +230,15 @@ export interface FileRouteTypes {
     | '/apps'
     | '/auth'
     | '/downloads'
+    | '/entertainment'
     | '/games'
+    | '/privacy'
     | '/projects'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/studios'
     | '/support'
+    | '/terms'
     | '/account'
     | '/admin/news'
     | '/admin/products'
@@ -213,11 +253,15 @@ export interface FileRouteTypes {
     | '/apps'
     | '/auth'
     | '/downloads'
+    | '/entertainment'
     | '/games'
+    | '/privacy'
     | '/projects'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/studios'
     | '/support'
+    | '/terms'
     | '/account'
     | '/admin/news'
     | '/admin/products'
@@ -234,11 +278,15 @@ export interface FileRouteTypes {
     | '/apps'
     | '/auth'
     | '/downloads'
+    | '/entertainment'
     | '/games'
+    | '/privacy'
     | '/projects'
     | '/reset-password'
     | '/sitemap.xml'
+    | '/studios'
     | '/support'
+    | '/terms'
     | '/_authenticated/account'
     | '/admin/news'
     | '/admin/products'
@@ -256,22 +304,40 @@ export interface RootRouteChildren {
   AppsRoute: typeof AppsRoute
   AuthRoute: typeof AuthRoute
   DownloadsRoute: typeof DownloadsRoute
+  EntertainmentRoute: typeof EntertainmentRoute
   GamesRoute: typeof GamesRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProjectsRoute: typeof ProjectsRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  StudiosRoute: typeof StudiosRoute
   SupportRoute: typeof SupportRoute
+  TermsRoute: typeof TermsRoute
   ProductsSlugRoute: typeof ProductsSlugRoute
   SitemapXmlRoute: typeof SitemapXmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/support': {
       id: '/support'
       path: '/support'
       fullPath: '/support'
       preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/studios': {
+      id: '/studios'
+      path: '/studios'
+      fullPath: '/studios'
+      preLoaderRoute: typeof StudiosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -295,11 +361,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/games': {
       id: '/games'
       path: '/games'
       fullPath: '/games'
       preLoaderRoute: typeof GamesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entertainment': {
+      id: '/entertainment'
+      path: '/entertainment'
+      fullPath: '/entertainment'
+      preLoaderRoute: typeof EntertainmentRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/downloads': {
@@ -439,11 +519,15 @@ const rootRouteChildren: RootRouteChildren = {
   AppsRoute: AppsRoute,
   AuthRoute: AuthRoute,
   DownloadsRoute: DownloadsRoute,
+  EntertainmentRoute: EntertainmentRoute,
   GamesRoute: GamesRoute,
+  PrivacyRoute: PrivacyRoute,
   ProjectsRoute: ProjectsRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  StudiosRoute: StudiosRoute,
   SupportRoute: SupportRoute,
+  TermsRoute: TermsRoute,
   ProductsSlugRoute: ProductsSlugRoute,
   SitemapXmlRoute: SitemapXmlRoute,
 }

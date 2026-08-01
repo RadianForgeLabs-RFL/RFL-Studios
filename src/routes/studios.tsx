@@ -4,7 +4,7 @@ import { lazy, Suspense } from "react";
 import { productListQuery, homeCountsQuery } from "@/lib/data";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Code, Smartphone, Cpu, Download, Star, Zap } from "lucide-react";
+import { ArrowRight, Code, Smartphone, Download, Zap } from "lucide-react";
 
 const ProductCard = lazy(() => import("@/components/site/ProductCard").then(m => ({ default: m.ProductCard })));
 
@@ -12,7 +12,7 @@ export const Route = createFileRoute("/studios")({
   head: () => ({
     meta: [
       { title: "RFL Studios — Apps, Tools & Software by Radian Forge Labs" },
-      { name: "description", content: "Professional Windows and Android applications, AI tools, utilities, and developer tools by RFL Studios." },
+      { name: "description", content: "Professional Windows and Android applications, utilities, and developer tools by RFL Studios." },
     ],
   }),
   component: Studios,
@@ -30,7 +30,6 @@ function FeatureCard({ icon: Icon, title, description }: { icon: any, title: str
 
 function Studios() {
   const apps = useQuery(productListQuery("app"));
-  const aiTools = useQuery(productListQuery("ai"));
   const counts = useQuery(homeCountsQuery());
 
   return (
@@ -48,9 +47,6 @@ function Studios() {
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" className="bg-gradient-to-r from-blue-500 to-cyan-400 text-white hover:opacity-90">
                 <Link to="/apps">Browse Apps</Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-blue-500/30 text-blue-400 hover:bg-blue-500/10">
-                <Link to="/ai-tools">AI Tools</Link>
               </Button>
             </div>
           </div>
@@ -72,11 +68,6 @@ function Studios() {
             description="Tools and utilities to streamline your development workflow."
           />
           <FeatureCard
-            icon={Cpu}
-            title="AI Tools"
-            description="Cutting-edge AI applications powered by modern technology."
-          />
-          <FeatureCard
             icon={Download}
             title="Utilities"
             description="Essential utilities for everyday computing tasks."
@@ -86,24 +77,15 @@ function Studios() {
             title="Open Source"
             description="Contributing to the open-source community with quality software."
           />
-          <FeatureCard
-            icon={Star}
-            title="Premium Software"
-            description="Professional-grade applications with advanced features."
-          />
         </div>
       </section>
 
       {/* STATS */}
       <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <Card className="border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6 text-center">
             <div className="text-4xl font-bold text-blue-500">{counts.data?.apps ?? 0}</div>
             <div className="mt-2 text-sm text-muted-foreground">Applications</div>
-          </Card>
-          <Card className="border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6 text-center">
-            <div className="text-4xl font-bold text-blue-500">{aiTools.data?.length ?? 0}</div>
-            <div className="mt-2 text-sm text-muted-foreground">AI Tools</div>
           </Card>
           <Card className="border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6 text-center">
             <div className="text-4xl font-bold text-blue-500">100%</div>
@@ -135,29 +117,6 @@ function Studios() {
             </Card>
           ))}>
             {(apps.data ?? []).slice(0, 6).map((p) => <ProductCard key={p.id} p={p} />)}
-          </Suspense>
-        </div>
-      </section>
-
-      {/* AI TOOLS */}
-      <section className="mx-auto max-w-7xl px-4 py-16">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <h2 className="text-3xl font-bold">AI Tools</h2>
-            <p className="mt-2 text-sm text-muted-foreground">Intelligent solutions powered by AI.</p>
-          </div>
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/ai-tools">All AI Tools <ArrowRight className="ml-1 h-4 w-4" /></Link>
-          </Button>
-        </div>
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <Suspense fallback={Array(3).fill(0).map((_, i) => (
-            <Card key={i} className="border border-blue-500/20 bg-gradient-to-br from-blue-500/5 to-transparent p-6">
-              <div className="h-40 bg-blue-500/10 rounded animate-pulse" />
-              <div className="mt-4 h-4 w-3/4 bg-blue-500/10 rounded" />
-            </Card>
-          ))}>
-            {(aiTools.data ?? []).slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
           </Suspense>
         </div>
       </section>
